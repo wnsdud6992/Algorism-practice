@@ -1,3 +1,3 @@
 # Algorism-practice
 practicing algorism
-하루에 하나씩
+(one problem in every day)
