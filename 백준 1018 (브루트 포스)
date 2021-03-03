@@ -1,0 +1,42 @@
+#include <stdio.h>                    # 브루트 포스 알고리즘: 조합 가능한 모든 경우를 대입해서 실행해보는 알고리즘(크게 어렵지 않지만 문제를 잘못 파악하여 시간이 오래걸림)
+
+int main() {
+	int n, m, num = 0, i, j, count_B, count_W,min=0, Min=1000;
+	int a = 0, b = 0;
+	char arr[50][50];
+	scanf("%d %d", &n, &m);
+	for (i = 0; i < n; i++) {
+		scanf("%s",&arr[i]);
+	}
+
+	for (a = 0; a < n - 7; a++) {       # 8X8을 만들 수 있는 모든 경우를 a,b를 이용하여 돌, i,j를 이용하여 8X8바둑판 안에서 모든 바둑을 대조해 보며 가장 적게 바꾸는 횟수를 구함  
+		for (b = 0; b < m - 7; b++) {
+			count_B = 0, count_W = 0;
+			for (i = a; i < a + 8; i++) {
+				for (j = b; j < b + 8; j++) {
+					if (i % 2 == 0 && j % 2 == 0) {
+						if (arr[i][j] == 'B') count_W++;
+						else  count_B++;
+					}
+					else if (i % 2 == 0 && j % 2 == 1) {
+						if (arr[i][j] == 'W') count_W++;
+						else count_B++;
+					}
+					else if (i % 2 == 1 && j % 2 == 0) {
+						if (arr[i][j] == 'W') count_W++;
+						else count_B++;
+					}
+					else if (i % 2 == 1 && j % 2 == 1) {
+						if (arr[i][j] == 'B') count_W++;
+						else  count_B++;
+					}
+				}
+			}
+			if (count_B > count_W) min= count_W;
+			else min= count_B;
+
+			if (Min > min) Min = min;
+		}
+	}
+	printf("%d", Min);	
+}
