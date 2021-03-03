@@ -1,3 +1,3 @@
-# Algorism-practice
-practicing algorism in python
+# Algorithm-practice
+practicing algorithm in python
 (one problem in every day)
