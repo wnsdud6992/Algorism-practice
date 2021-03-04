@@ -1,0 +1,23 @@
+666부터 시작해서 6이 연속 3개 들어간 수를 찾는 문제. 그중 n번째 수를   
+
+
+#include <stdio.h>
+#include <math.h>                          #pow(밑,지수) 라는 함수를 이용하기 위해서 math.h라이브러리 가져옴 
+
+int main() {
+	int n, count = 0;
+	int  i, num=665;
+	scanf("%d", &n);
+
+	while (1) {
+		num++;
+		for (i = 0; i < 10; i++) {
+			if ((int)(num / pow(10, i)) % 1000 == 666) {           #주어진 수의 일의자리부터 하나씩 없애보면서 666이 연속으로 존재하는지 확인.
+				count++;                                             # 만약 각자리 숫자를 더하려면 pow(10,i)로 10의 배승씩 계속 나누면서 10의 나머지를 구하므로써 1의 자리부터 구할수 있다.
+				break;                                               # n / pow(10,i) %10 이때 i는 0부터 자리수에 따라..
+			}
+		}
+		if (count == n) break;
+	}
+	printf("%d", num);
+}
