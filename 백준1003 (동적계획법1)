@@ -1,0 +1,54 @@
+#방법 1                      재귀를 이용하여 간편하게 함수로 나타냄. 함수의 return값이 2개일 경우 포인터를 이용하거나 구조체를 이용! 
+#include <stdio.h>
+typedef struct _ {
+	int one;
+	int zero;
+}number;
+
+number fib(int num) {
+	number k;
+	k.zero =0, k.one = 0;
+	if (num == 0) k.zero++;
+	else if (num == 1) k.one++;
+	else {
+		k.zero=fib(num - 1).zero+ fib(num - 2).zero;                # else fib(num-1)+fib(num-2)할 경우 에러발생: 구조체끼리는 '+'연산 불가. 정수형끼리(구조체 요소)만 가능
+		k.one= fib(num - 1).one + fib(num - 2).one;
+	}
+	return k;
+}
+
+int main() {
+	int i,n, num;
+	number N;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		scanf("%d", &num);
+		N = fib(num);
+		printf("%d %d\n", N.zero, N.one);
+	}
+}
+
+#방법 2            재귀를 쓰지 않아 속도가 확실히 빠름
+#include <stdio.h>
+
+int main() {
+	int i, n, num;
+	int arr[41][2];
+	scanf("%d", &n);
+	
+	arr[0][0] = 1;
+	arr[0][1] = 0;
+
+	arr[1][0] = 0;
+	arr[1][1] = 1;
+
+	for (int j = 2; j <= 40; j++) {
+		arr[j][0] = arr[j - 1][0] + arr[j - 2][0];                   # 피보나치수열에서 n 항의 0호출 개수와 1호출 개수는 n-1 항과 n-2항의 0, 1호출 개수의 합과 같다.
+		arr[j][1] = arr[j - 1][1] + arr[j - 2][1];
+	}
+			
+	for (i = 0; i < n; i++) {
+		scanf("%d", &num);
+		printf("%d %d\n", arr[num][0], arr[num][1]);
+	}
+}
