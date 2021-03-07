@@ -1,0 +1,38 @@
+--포도주 시식-- 크기가 다른 일렬로 있는 n개의 포도주를 최대한 많이 섭취, 단 3개 연속 섭취 불가
+계단오르기와 비슷한 문제이나 이 문제는 마지막 잔을 꼭 섭취해야 할 필요가 없어 경우의 수가 더 많아진 문제이다.
+알고리즘은 동일. 마지막잔을 마시던가 마지막 전 잔을 마셔야 되는데 마지막 잔 섭취시 이전잔을 섭취한 경우와 전전잔을 섭취한 경우 나눠서 해결.
+마지막 전잔을 마신 경우는 마지막잔을 못마신다는 뜻, 즉 전전잔을 마시고 전잔을 마셔서 섭취완료가 된 상태. 이 세 경우의 최대값 구함.
+
+
+#include <stdio.h>
+
+grape[10000] = {0,};
+dp[10000] = {0,};
+
+int Max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int main() {
+	int n, i, total = 0;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		scanf("%d", &grape[i]);
+	}
+	dp[0] = grape[0];
+	dp[1] = Max(grape[0] + grape[1], grape[1]);
+	dp[2] = Max(Max(grape[0] + grape[2], grape[1] + grape[2]), grape[0] + grape[1]);
+	dp[3] = Max(Max(grape[3] + grape[2] + dp[0], grape[3] + dp[1]), grape[2] + grape[1]);
+
+	if (n == 1) total = dp[0];
+	else if(n==2) total = dp[1];
+	else if (n == 3) total = dp[2];
+	else if (n == 4) total = dp[3];     //일반항 점화식에 i-4까지 인덱스가 존재함을 통해 i==4인 경우까지 초기화 해줘야 함을 예상할 수 있다.
+	else {
+		for (i = 4; i < n; i++) {
+			dp[i] = Max(Max(grape[i] + grape[i - 1] + dp[i - 3], grape[i] + dp[i - 2]), grape[i - 1] + grape[i - 2] + dp[i - 4]);
+		}
+		total = dp[n - 1];
+	}
+	printf("%d", total);
+}
