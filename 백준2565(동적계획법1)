@@ -1,0 +1,49 @@
+--전깃줄-- 1번 배열, 2번 배열에 각각 서로다른 인덱스가 주어져 있고 각 인덱스끼리 줄을 잇고나면 최소한의 선만 제거하여 겹치는 전깃줄이 존재하지 않게 구하기.
+LIS(longest icreasing subsequence)활용문제로 1번 배열을 sorting하고나면 2번 배열을 LIS하게되면 안꼬이는 최대한의 전선수를 구할 수 있게 된다.
+처음엔 감을 못잡았고 힌트를 얻고 해결.ㅣ
+
+
+#include<stdio.h>
+
+dp[500] = { 0, };
+
+int Max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int main() {
+	int n, i, j, total = 0,t=0,c;
+	int arr1[500], arr2[500];
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		scanf("%d %d", &arr1[i], &arr2[i]);
+	}
+	for (i = 0; i < n-1; i++) {            //배열 1을 기준으로 sorting -> 배열2도 배열1과 같이 움직여야 섞이지 않는다.
+		for (j = i+1; j < n; j++) {
+			if (arr1[i] > arr1[j]) {
+				t = arr1[i];
+				arr1[i] = arr1[j];
+				arr1[j] = t;
+				t = arr2[i];
+				arr2[i] = arr2[j];
+				arr2[j] = t;
+			}
+		}
+	}
+
+	dp[0] = 1;                              //여러번 풀었던 LIS문제
+	for (i = 1; i < n; i++) {
+		c = 0;
+		for (j = i - 1; j >= 0; j--) {
+			if (arr2[j] < arr2[i]) {
+				c = Max(c, dp[j]);
+			}
+		}
+		dp[i] = c + 1;
+	}
+	for (i = 0; i < n; i++) {
+		total = Max(total, dp[i]);
+		
+	}
+	printf("%d", n - total);                 //제거해야 할 최소한의 전깃줄이므로 전체 전기줄 n에서 안꼬인 전깃줄의 최대값을 뺀다.
+}
