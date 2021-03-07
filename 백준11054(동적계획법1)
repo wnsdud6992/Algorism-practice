@@ -1,0 +1,45 @@
+--가장 긴 바이토닉 부분-- 가장 긴 부분수열의 항의 수 구하는 문제 응용(임의의 항을 잡고 이 항을 기준으로 좌우로 감소하는 수열=바이토닉 수열. 그 길이의 최댓값)
+
+
+#include <stdio.h>
+arr[1000] = {0,};
+dp[1000] = { 0, };
+cp[1000] = { 0, };
+
+int Max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int main() {
+	int n,k, i, j,a,b,total=0;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		scanf("%d", &arr[i]);
+	}
+	dp[0] = 1, cp[n - 1] = 1;
+
+	for (i = 1; i < n; i++) {              //각 항으로부터 좌에서 우로 증가하는 부분수열의 최대 개수를 dp[]배열에 저장함 
+		a = 0;
+		for (j = i - 1; j >= 0; j--) {
+			if (arr[i] > arr[j]) {
+				a = Max(a, dp[j]);
+			}
+		}
+		dp[i] = a+1;
+	}
+
+	for (i = n - 2; i >= 0; i--) {          ////각 항으로부터 우에서 좌로 증가하는 부분수열의 최대 개수를 cp[]배열에 저장함 
+		b = 0;
+		for (k = i + 1; k < n ; k++) {
+			if (arr[i] > arr[k]) {
+				b = Max(b, cp[k]);
+			}
+		}
+		cp[i] = b + 1;
+	}
+
+	for (i = 0; i < n; i++) {
+		total = Max(total, dp[i] + cp[i]);
+	}
+	printf("%d", total-1);                   //임의의 항을 기준으로 dp[i]+cp[i]의 최대값을 구하고 i항이 두 배열의 값에 중복되므로 1을 빼준다.
+}
