@@ -1,0 +1,47 @@
+--단지번호 붙이기-- 주어진 행렬에서 1이 상하 좌우로 연결된 그룹을 단지라 취급하고 단지의 총개수 및 각 단지의 아파트수를 오름차순으로 나열
+
+
+#include <stdio.h>
+#include <stdlib.h>           // 실행 시간을 줄이기 위해서는 앞으로 계속 qsort를 써야할 것같다
+
+int map[25][25] = { 0, };     // 사용자로부터 단지 정보를 받아옴
+int arr[625] = { 0, };        // 각 단지별로 몇개의 아파트가 존재하는지 저장해놓는 배열
+int n;
+
+int compare(void* first, void* second) {        // qsort에 필요한 compare함수 외워두자
+	if (*(int*)first > *(int*)second) return 1;
+	else if (*(int*)first < *(int*)second) return -1;
+	else return 0;
+}
+
+int BFS(int i, int j) {                          //BFS함수의 구현(전체 단지를 보면 BFS이나 각 단지에서는 DFS형식으로 재귀로 구현)
+	if (i  < 0 || j  < 0 || i  >= n || j  >= n || map[i][j] == 0) return 0;        // 이부분은 재귀를 사용하여 아파트가 존재하는 지역의 상하 좌우를 살펴볼때 그 범위가 전체 범위를
+	map[i][j] = 0;                                                                 // 넘어가는지 확인하고 안넘어가도 그 지역에 아파트가 존재하는지 확인. 없으면 0을 리턴
+	return 1 + BFS(i + 1, j) + BFS(i - 1, j) + BFS(i, j + 1) + BFS(i, j - 1);   // i,j에 아파트가 존재했음으로 1을 더하고 상하좌우에 아파트 존재하는지 확인 -> 재귀로 구현
+}
+
+int main() {
+	int  i, j, a = 0;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < n; j++) {
+			scanf("%1d", &map[i][j]);           //2차배열 입력받을시 각각의 index를 %1d를 이용하여 하나씩 입력받음
+		}
+	}
+
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < n; j++) {
+			if(map[i][j]==1){                  //1을 발견하면 그 주위로 몇개의 아파트로 단지를 이루는지 BFS함수로 구하고 그 개수를 arr배열에 추가
+			arr[a]=BFS(i, j);
+			a++;
+			}
+		}
+	}
+	
+	printf("%d\n", a);
+	qsort(arr, a, sizeof(int), compare);          //arr배열을 오름차순 순으로 정렬
+
+	for (i = 0; i < a; i++) {
+		printf("%d\n", arr[i]);
+	}
+}
