@@ -1,0 +1,55 @@
+--바이러스-- 1번 컴퓨터와 연결되어있는 노드의 개수 찾기(연결에 연결도 포함)
+기본적인 BFS와 DFS와 구현 방식이 동일
+
+#include <stdio.h>
+
+int map[101][101] = { 0, };
+int BFSvisit[101] = { 0 };
+int DFSvisit[101] = { 0 };
+int queue[101] = { 0, };
+int sum1 = 0;            // DFS로 탐색시 총 개수 저장
+int sum2 = 0;            //BFS로 연결된 노드 개수를 탐색 시 총 개수 저장
+
+int BFS(int n, int s) {
+	int i, pop,front=0,l=0;
+	BFSvisit[s] = 1;
+	queue[l] = s;
+	l++;
+	while (front < l) {
+		pop = queue[front];
+		front++;
+		for (i = 1; i <= n; i++) {
+			if (map[pop][i] == 1 && BFSvisit[i] == 0) {
+				sum2 += 1;                                  //시작노드를 제외하고 연결된 노드의 개수를 더하기 위해 큐에 들어오는 두번째 값부터 SUM2에 추가 
+				queue[l] = i; 
+				l++;
+				BFSvisit[i] = 1;
+			}
+		}
+	}
+	return sum2;
+}
+
+int DFS(int n, int s) {
+	
+	DFSvisit[s] = 1;
+	for (int i = 1; i <= n;i++) {
+		if (map[s][i] == 1 && DFSvisit[i] == 0) {
+			sum1 += 1;                                    //시작노드 제외하기 위해서 재귀반복을 1번 할때부터 SUM1에 추가
+			DFS(n, i);
+		}
+	}
+	return sum1;
+}
+
+int main() {
+	int n, t, a, b,i,start;
+	scanf("%d", &n);
+	scanf("%d", &t);
+	for (i = 0; i < t; i++) {
+		scanf("%d %d", &a, &b);
+		map[a][b] = map[b][a] = 1;
+	}
+	printf("%d",DFS(n, 1));               //DFS나 BFS나 둘중 어느것을 넣어도 상관 없음
+
+}
