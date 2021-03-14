@@ -1,0 +1,68 @@
+--토마토-- 인접해있는 토마토는 익음. 전체 토마토 익히는데 걸리는 날짜. -1은 토마토 없는 공간 한칸띄워진 토마토끼리는 영향x
+기본적인 BFS문제로 구조체를 활용하여 큐를 이용한 BFS로 해결
+* 이전 문제들과는 다르게 입력 데이터가 띄어쓰기 형태로 주어졌는데 -1이라는 수를 입력받을때 space를 2개 차지하기 때문에 이전과 같이 %1d로 받게되면
+-1을 제대로 받을 수가 없게 된다.
+* map[y][x] 형태임을 기억해라. 이전문제는 그래프가 돌아가 있어도 크게 문제가 없지만 앞으로  이차행렬을 나타낼때는 [y][x]형태임을 기억해야한다.
+
+#include <stdio.h>
+
+typedef struct que {
+	int x;
+	int y;
+	int d;
+}queue;
+queue q[1000000];
+int front = -1, last = -1;           // 데이터를 입력받을때 시작점인, 익은토마토가 존재하는 위치 1을 입력받은경우 main함수에서 큐에 넣기위해 전역변수로 설정.
+map[1000][1000];
+
+void BFS(int n, int m) {  
+	int i, j, x, y, d=0,flag=0;
+	while (front < last) {              //이미 main함수에서 시작위치인 1이 있는 좌표를 큐에 다 넣었기에 이를 기준으로 BFS 탐색 시작. 
+		front++;
+		x = q[front].x, y = q[front].y, d = q[front].d;
+		if (x + 1 < m && map[y][x+1] == 0) {
+			last++;
+			q[last].x = x + 1, q[last].y = y, q[last].d = 1 + d;
+			map[y][x+1] = 1;
+		}
+		if (x - 1 >=0 && map[y][x-1] == 0) {
+			last++;
+			q[last].x = x - 1, q[last].y = y, q[last].d = 1 + d;
+			map[y][x-1] = 1;
+		}
+		if (y + 1 < n && map[y+1][x] == 0) {
+			last++;
+			q[last].x = x, q[last].y = y+1, q[last].d = 1 + d;
+			map[y+1][x] = 1;
+		}
+		if (y - 1 >=0 && map[y-1][x] == 0) {
+			last++;
+			q[last].x = x, q[last].y = y-1, q[last].d = 1 + d;
+			map[y-1][x] = 1;
+		}
+	}
+
+	for (i = 0; i < n; i++) {         //탐색이 끝나면 d에는 가장 하단 노드까지 내려오는데 걸린 횟수가 저장되어있고 map배열에는 익힐수 있는 토마토는 다익혀놨다
+		for(j=0;j<m;j++)
+			if (map[i][j] == 0) {         //-1에 의해 안익은 토마토가 있는경우 flag에 1을 더해 flag가 0보다 큰경우 안익은 토마토가 1개이상 존재 -> -1 
+				flag++;
+			}
+	}
+	if (flag > 0) printf("-1");
+	else printf("%d", d);
+}
+
+int main() {
+	int n, m, i, j;
+	scanf("%d %d", &m, &n);
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < m; j++) {
+			scanf("%d", &map[i][j]);
+			if (map[i][j] == 1) {
+				last++;
+				q[last].x = j, q[last].y = i, q[last].d = 0;
+			}
+		}
+	}
+	BFS(n, m);
+}
