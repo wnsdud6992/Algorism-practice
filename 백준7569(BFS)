@@ -1,0 +1,65 @@
+--토마토 3차원--
+이전 토마토 문제와 일치하지만 3차원으로 구성되 문제이다. 그래서 next좌표를 if문으로 각각나눠 적기엔 양이 많아져서
+배열과 반복문을 이용하여 하나로 뭉쳐 풀었다. 주의해야할 사항은 역시나 map[z][y][x]순이라는 것이다.
+
+#include <stdio.h>
+
+int map[100][100][100];
+typedef struct que {
+	int x;
+	int y;
+	int z;
+	int s;
+}queue;
+queue q[1000000];
+int front = -1; last = -1;
+
+void BFS(int m, int n, int h) {
+	int x=0, y=0, z=0, s=0, flag=0;
+	int n_x[] = {-1,1,0,0,0,0};
+	int n_y[] = {0,0,-1,1,0,0};
+	int n_z[] = {0,0,0,0,-1,1};
+	while (front < last) {
+		front++;
+	    x= q[front].x,  y= q[front].y, z= q[front].z, s= q[front].s;
+
+		for (int i = 0; i < 6; i++) {
+			int nextx = n_x[i] + x;
+			int nexty = n_y[i] + y;
+			int nextz = n_z[i] + z;
+
+			if (nextx < 0 || nextx >= m || nexty < 0 || nexty >= n || nextz < 0 || nextz >= h) continue;
+			if (map[nextz][nexty][nextx] == 0) {
+				last++;
+				q[last].x = nextx, q[last].y = nexty, q[last].z = nextz, q[last].s = s + 1;
+				map[nextz][nexty][nextx] = 1;
+			}
+		}
+	}
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < n; j++) {
+			for (int k = 0; k < m; k++) {
+				if(map[i][j][k] == 0) flag++;
+			}
+		}
+	}
+	if (flag > 0) printf("-1");
+	else printf("%d", s);
+}
+
+int main() {
+	int m, n, h, i, j, k;
+	scanf("%d %d %d", &m, &n, &h);
+	for (i = 0; i < h; i++) {
+		for (j = 0; j < n; j++) {
+			for (k = 0; k < m; k++) {
+				scanf("%d", &map[i][j][k]);
+				if (map[i][j][k] == 1) {
+					last++;
+					q[last].x = k, q[last].y = j, q[last].z = i, q[last].s = 0;
+				}
+			}
+		}
+	}
+	BFS(m, n, h);
+}
