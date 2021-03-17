@@ -1,0 +1,62 @@
+--벽부수고 이동하기--
+테스트 케이스도 다 통과하고 코드에 문제는 없어보이는데 계속 틀렸다고 나온다.
+나중에 다시 확인 예정
+
+#include <stdio.h>
+
+int map[1000][1000];
+
+typedef struct que {
+	int x;
+	int y;
+	int s;
+	int b;
+}queue;
+
+queue q[1000000];
+front = -1, last = -1;
+
+int BFS(int n, int m) {
+	int x, y, s, b, i, flag1=0, flag2=0;
+	last++;
+	q[last].x = 0, q[last].y = 0, q[last].s = 1, q[last].b = 1;
+	map[0][0] = 2;
+	int next_x[] = { 0, 0, -1, 1 };
+	int next_y[] = {-1, 1, 0, 0};
+	while (front < last) {
+		front++;
+		x=q[front].x, y= q[front].y, s=q[front].s, b= q[front].b;
+		if (x == n - 1 && y == m - 1) {
+			flag1 = 1;
+			return s;
+		}
+		for (i = 0; i < 4; i++) {
+			int nextx = next_x[i] + x;
+			int nexty = next_y[i] + y;
+			if (nextx < 0 || nextx >= n || nexty < 0 || nexty >= m || map[nextx][nexty]==2) continue;
+			if (map[nextx][nexty] == 0) {
+				last++;
+				q[last].x = nextx, q[last].y = nexty, q[last].s = s+1, q[last].b=b;
+				map[nextx][nexty] = 2;
+			}
+			else if (map[nextx][nexty] == 1&& b==1) {
+				last++;
+				q[last].x = nextx, q[last].y = nexty, q[last].s = s + 1, q[last].b = b-1;
+				map[nextx][nexty] = 2;
+			}
+		}
+	}
+	return -1;
+}
+
+int main() {
+	int n, m, i, j;
+	scanf("%d %d", &n, &m);
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < m; j++) {
+			scanf("%1d", &map[i][j]);
+		}
+	}
+	int a= BFS(n, m);
+	printf("%d", a);
+}
