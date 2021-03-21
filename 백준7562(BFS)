@@ -1,0 +1,68 @@
+--나이트의 이동-- 체스에서 나이트(마)의 움직임 시작, 도착점주면 몇번만에 도착할 수 있을지
+기본적인 BFS문제이다. 그러나 처음에 입력을 y,x좌표 순으로 받는걸 내 맘대로 x,y순으로 받는다 생각하여
+문제에 대한 답이 달라져 버렸다. 주의하자.
+앞으로 상하좌우 뭐 대각선 이렇게 움직이는 경우, 처음부터 nextx, nexty를 만들어서 풀자
+
+
+#include <stdio.h>
+
+int map[300][300];
+typedef struct que {
+	int x;
+	int y;
+	int s;
+	
+}queue;
+
+queue q[90000];
+int front, last;
+
+void BFS(int a, int b, int l) {
+	int x, y, s;
+	int next_x[] = {1,2,1,2,-1,-2,-1,-2};
+	int next_y[] = {2,1,-2,-1,2,1,-2,-1};
+	int nextx, nexty;
+	while (front < last) {
+		front++;
+		x=q[front].x, y= q[front].y, s=q[front].s;
+		if (x == a && y == b) {
+			printf("%d\n", s);
+			break;
+		}
+		for (int i = 0; i < 8; i++) {
+			nextx = next_x[i] + x;
+			nexty = next_y[i] + y;
+			if (nextx < 0 || nextx >= l || nexty < 0 || nexty >= l || map[nexty][nextx]==1) continue;
+			if (map[nexty][nextx] == 0) {
+				last++;
+				q[last].x = nextx, q[last].y = nexty, q[last].s = s + 1;
+				map[nexty][nextx] = 1;
+			}
+		}
+		
+			
+	}
+}
+void init(int l) {            //이미 들렸던 체스판 표시를 한것을 다시 초기화
+	for (int a = 0; a < l; a++) {
+		for (int b = 0; b < l; b++) {
+			map[a][b] = 0;
+		}
+	}
+}
+
+int main() {
+	int n, startx, starty, goalx, goaly,l,i;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		scanf("%d", &l);
+		scanf("%d %d", &starty, &startx);
+		scanf("%d %d", &goaly, &goalx);
+		init(l);
+		last = -1, front = -1;               //큐를 매번 초기화하기 위해 bfs돌릴때마다 
+		last++;
+		q[last].x = startx, q[last].y = starty, q[last].s = 0;
+		map[starty][startx] = 1;      
+		BFS(goalx, goaly, l);
+	}
+}
