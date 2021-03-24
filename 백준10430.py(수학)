@@ -1,0 +1,13 @@
+--나머지--
+나머지 계산을 하여 출력하는 쉬운 문제. python을 이용함
+
+
+a,b,c=map(int,input().split())
+result1=(a+b)%c
+result2=((a%c)+(b%c))%c
+result3=(a*b)%c
+result4=((a%c)*(b%c))%c
+print(result1)
+print(result2)
+print(result3)
+print(result4)
