@@ -1,0 +1,61 @@
+--이분그래프--
+그래프가 이분그래프인지 판별해내는 문제이다. 문제의 원리는 어렵지 않으나 처음으로 메모리 초과를 경험했다(아직 해결x)
+노드를 2만개를 주기에 이차원배열로 구성하면 메모리초과를 문제를 풀수없다고 한다. 즉 링크드 리스트로 해결해야 할 것같다.
+링크드 리스트는 다음에 보기로 한다. 테스트케이스는 다 맞게 나온다.
+
+
+#include <stdio.h>
+
+int map[20000][20000];
+int q[200001];
+int front, last;
+char color[20001];
+
+int bfs(int v, int flag) {
+	int a, i;
+	while (front < last) {
+		front++;
+		a = q[front];
+		for (i = 1; i <= v; i++) {
+			if (map[a][i] == 1 && color[i] == 0) {
+				last++;
+				q[last] = i;
+				if (color[a] == 'r') color[i] = 'b';
+				else if (color[a] == 'b') color[i] = 'r';
+				map[a][i] = map[i][a] = 0;
+			}
+			else if (map[a][i]==1 && color[a] == color[i]) flag++;
+		}
+	}
+	return flag;
+}
+
+int main() {
+	int k, v, e, i, j, a, b, c, d, flag,sign=0;
+	scanf("%d", &k);
+	
+	for (i = 0; i < k; i++) {
+		scanf("%d %d", &v, &e);
+		for (j = 0; j < e; j++) {
+			scanf("%d %d", &a, &b);
+			map[a][b] = map[b][a] = 1;
+		}
+		for (c = 1; c <= v; c++) {
+			for (d = 1; d <= v; d++) {
+				if (map[c][d] == 1) {
+					last = -1, front = -1;
+					last++;
+					q[last] = c;
+					color[c] = 'r';
+					flag = 0;
+					flag = bfs(v, flag);	
+					if (flag != 0) sign++;
+				}
+			}
+		}
+		if (sign == 0) printf("Yes\n");
+		else printf("No\n");
+	}
+
+	return 0;
+}
