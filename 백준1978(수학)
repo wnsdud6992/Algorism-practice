@@ -1,0 +1,29 @@
+--소수찾기--
+n개의 수를 입력받고 이 수들중 소수의 개수를 찾는 방법.
+
+n=int(input())
+num=0
+arr=list(map(int,input().split()))      #사용자로부터 n개의 수를 입력받을때 이를 배열에 하나씩 저장.
+for i in range(n):
+    if arr[i]==1: continue
+    else:
+        flag=0     
+        for j in range(2,arr[i]//2+1):    # for문을 돌면서 arr[i]가 arr[i]//2+1까지 나눠떨어지지 않으면 num을 1증가. 즉 모든 경우에 약수가 없으면 소수로 판별하는데
+            if arr[i]%j==0:               # 방법이 없어 나눠떨어지면 flag에 1을 더해 flag가 0이면소수라 판단.
+                flag+=1
+                break
+        if flag==0: num+=1
+print(num)
+            
+
+n=int(input())
+num=0
+arr=list(map(int,input().split()))
+for i in range(n):
+    if arr[i]==1: continue        
+    else:
+        for j in range(2,arr[i]//2+1):
+            if arr[i]%j==0: 
+                break
+        else: num+=1                      #질문을 보다가 알게되었는데 for~~다하고 이에 해당하지 않으면 else~를 사용. 파이썬에 존재하는 for-else문!!
+print(num)
