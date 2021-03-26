@@ -1,0 +1,27 @@
+--골드바흐의 추측--  시간초과만 10번 난 문제이다.
+1. 에라토스테네스의 체를 알아야한다.
+2. 최대입력값의 소수를 전부 리스트화시키는 방법이 아니라 리스트에 인덱스에 따라 소수인지 아닌지 판별하여 True, False를 저장하여
+시간복잡도 O(1)만에 소수인지를 판별할수 있게 만듬
+3. sys.stdin.readline()을 사용할 줄알아야 한다.
+
+* 사용자로부터 여러개를 입력받는 경우, sys.stdin.readline()을 이용하여 입력받아야 속도측면에서 input()보다 훨씬 효율적이다.
+단 sys.stdin.readline()은 한줄씩 받아오는 함수이므로 map, int, list와 같은 함수를 적절히 잘 사용해야한다.
+
+import sys
+r=1000000
+check=[1]*r
+for i in range(2,r//2+1):
+    if check[i]==1:
+        for j in range(i*2,r,i):
+            check[j]=0
+    
+while(1):
+    n = int(sys.stdin.readline())    
+    if n==0: break
+    else:
+        for i in range(3,len(check)):
+            if check[i] and check[n-i]:
+                print("%d = %d + %d"%(n,i,n-i))
+                break
+
+
