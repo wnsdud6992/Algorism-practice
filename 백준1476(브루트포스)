@@ -1,0 +1,37 @@
+--날짜계산--
+방법 1: 단순히 브루트포스 기법으로 수차적으로 수행
+방법 2: 수학적인 접근. 중국인의 나머지 정리
+
+방법1
+arr=[0,0,0]
+arr[0],arr[1], arr[2]=map(int,input().split())
+
+count=1
+while(1):
+    if(arr[0]==1 and arr[1]==1 and arr[2]==1):
+        print(count)
+        break
+    else:
+        flag=[0,0,0]
+        if(arr[0]==1):
+            arr[0]=15
+            flag[0]=1
+        if(arr[1]==1):
+            arr[1]=28
+            flag[1]=1
+        if(arr[2]==1):
+            arr[2]=19
+            flag[2]=1
+        for i in range(3):
+            if flag[i]==0:
+                arr[i]-=1
+        count+=1
+
+방법2
+a,b,c=map(int,input().split())
+d=1
+while(1):
+  if (d-a)%15==0 (d-b)%28==0 (d-c)%15=9==0:      
+      print(d)
+      break
+  d+=1
