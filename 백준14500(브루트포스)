@@ -1,0 +1,102 @@
+--테트로미노--  nxm행렬에서 테트리스칸을 선택했을 때 요소 합이 최대로 뽑기
+모든 경우에대해 실수없이 고려해주기
+
+
+#include <stdio.h>
+
+arr[500][500];
+int Max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int line(int n, int m) {
+	int i, j,max=0,tmp=0;
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < m-3; j++) {
+			tmp = arr[i][j] + arr[i][j + 1] + arr[i][j + 2] + arr[i][j + 3];
+			if (tmp > max) max = tmp;
+		}
+	}
+	for (i = 0; i < n - 3; i++) {
+		for (j = 0; j < m; j++) {
+			tmp = arr[i][j] + arr[i+1][j] + arr[i+2][j] + arr[i+3][j];
+			if (tmp > max) max = tmp;
+		}
+	}
+	return max;
+}
+
+int box(int n, int m) {
+	int i, j, max = 0, tmp = 0;
+	for (i = 0; i < n-1; i++) {
+		for (j = 0; j < m - 1; j++) {
+			tmp = arr[i][j] + arr[i][j + 1] + arr[i+1][j + 1] + arr[i+1][j];
+			if (tmp > max) max = tmp;
+		}
+	}
+	for (i = 0; i < n - 1; i++) {
+		for (j = 0; j < m-1; j++) {
+			tmp = arr[i][j] + arr[i][j + 1] + arr[i + 1][j + 1] + arr[i + 1][j];
+			if (tmp > max) max = tmp;
+		}
+	}
+	return max;
+}
+int ell(int n, int m) {
+	int i, j, max = 0, tmp[8],a=0;
+	for (i = 0; i < n - 2; i++) {   //세로 직사각
+		for (j = 0; j < m - 1; j++) {
+			tmp[0] = arr[i][j] + arr[i+1][j] + arr[i + 2][j] + arr[i + 2][j+1];
+			tmp[1]= arr[i][j+1] + arr[i + 1][j+1] + arr[i + 2][j+1] + arr[i + 2][j];
+			tmp[2]=  arr[i][j] + arr[i + 1][j] + arr[i + 1][j+1] + arr[i + 2][j + 1];
+			tmp[3] = arr[i][j+1] + arr[i + 1][j+1] + arr[i + 1][j] + arr[i + 2][j];
+			tmp[4] = arr[i][j] + arr[i + 1][j] + arr[i + 2][j] + arr[i + 1][j + 1];
+			tmp[5] = arr[i][j+1] + arr[i + 1][j+1] + arr[i + 2][j+1] + arr[i + 1][j];
+			tmp[6] = arr[i][j] + arr[i][j+1] + arr[i + 1][j+1] + arr[i + 2][j + 1];
+			tmp[7] = arr[i][j] + arr[i + 1][j] + arr[i + 2][j] + arr[i][j+1];
+			for (int k = 0; k < 8; k++) {
+				a = Max(a, tmp[k]);
+			}
+			if (a > max) max = a;
+		}
+	}
+	for (i = 0; i < n - 2; i++) {   //가로 직사각
+		for (j = 0; j < m - 1; j++) {
+			tmp[0] = arr[i+1][j] + arr[i + 1][j+1] + arr[i + 1][j+2] + arr[i][j + 2];
+			tmp[1] = arr[i][j] + arr[i + 1][j] + arr[i + 1][j + 1] + arr[i + 1][j+2];
+			tmp[2] = arr[i][j] + arr[i][j+1] + arr[i][j + 2] + arr[i + 1][j + 2];
+			tmp[3] = arr[i][j] + arr[i + 1][j] + arr[i][j+1] + arr[i][j+2];
+			tmp[4] = arr[i+1][j] + arr[i + 1][j+1] + arr[i][j+1] + arr[i][j + 2];
+			tmp[5] = arr[i][j] + arr[i][j + 1] + arr[i + 1][j + 1] + arr[i + 1][j+2];
+			tmp[6] = arr[i+1][j] + arr[i][j + 1] + arr[i + 1][j + 1] + arr[i + 1][j + 2];
+			tmp[7] = arr[i][j] + arr[i][j+1] + arr[i][j+2] + arr[i+1][j + 1];
+			for (int k = 0; k < 8; k++) {
+				a = Max(a, tmp[k]);
+			}
+			if (a > max) max = a;
+		}
+	}
+	return max;
+
+}
+
+int main() {
+	int i, j, n, m,last=0;
+	int max[3];
+	scanf("%d %d", &n, &m);
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < m; j++) {
+			scanf("%d", &arr[i][j]);
+		}
+	}
+	max[0] = line(n, m);
+	max[1] = box(n, m);
+	max[2] = ell(n, m);
+
+
+	for (i = 0; i < 3; i++) {
+		last = Max(last, max[i]);
+	}
+	printf("%d", last);
+
+}
