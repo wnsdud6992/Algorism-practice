@@ -1,0 +1,55 @@
+--모든 순열--
+다음순열과 핵심은 비슷하다. 대신 이경우 주어진 항의 개수에 따른 전체 순열을 출력해야 하므로 while문과 flag를 이용하여
+마지막 순열이 오면 flag에 1을 더해 while문을 빠져나가도록 만들어 준다.
+
+#include <stdio.h>
+int arr[8];
+void swap(int *a, int *b) {
+	int tmp;
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+void print(int arr[],int n) {          //출력을 위한 함수
+	for (int i = 0; i < n; i++) {
+		printf("%d ", arr[i]);
+	}
+}
+
+int main() {
+	int i, j, n,k,flag=0;
+	scanf("%d", &n);
+	for (i = 1; i <= n; i++) {
+		arr[i - 1] = i;
+	}
+	while (1) {
+		print(arr, n);
+		printf("\n");
+		if (n == 1) flag++;
+		else {
+			for (i = n - 2; i >= 0; i--) {
+				if (i == 0 && arr[i] >= arr[i + 1]) flag++;           //순열의 마지막인 경우 flag에 표시
+				else if (arr[i] >= arr[i + 1]) continue;
+				else if (arr[i] < arr[i + 1]) {
+
+					for (j = n - 1; j >= i + 1; j--) {
+						if (arr[i] < arr[j]) {
+							swap(&arr[i], &arr[j]);
+							break;
+						}
+					}
+					k = i + 1;
+					j = n - 1;
+					while (k <= j) {
+						swap(&arr[k], &arr[j]);
+						k++;
+						j--;
+					}
+					break;
+				}
+			}
+		}
+		if (flag != 0) break;
+	}
+}
