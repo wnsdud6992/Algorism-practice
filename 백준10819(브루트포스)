@@ -1,0 +1,71 @@
+--차이를 최대로--
+앞선 다음순열과 핵심이 거의 동일한 문제이다.
+모든 순열을 돌면서 옆항과의 차의 절대값의 합이 가장 큰 값을 구하는 문제인데,
+1. 모든 항을 바꿔가며 처음부터 끝까지 돌리기 위한방법
+2. 차이 절대값의 합을 구하는 함수
+이 두가지가 필요하다. 1번을 위해서 c++이나 파이썬은 pemutation이라는 함수가 존재하여 쉽게 이용가능하다. 그러나 c언어는
+직접 순열을 돌리는 작업을 진행해야 한다.
+
+
+#include <stdio.h>
+int arr[8];
+
+void swap(int* a, int* b) {
+	int tmp;
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+int sub(int a, int b) {
+	if (a - b > 0) return a - b;
+	else return -(a - b);
+}
+
+int main() {
+	int i, j, n, k, flag = 0,total,max=0;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {
+		scanf("%d",&arr[i]);
+	}
+	for (i = 0; i < n-1; i++) {
+		for (j = i + 1; j < n; j++) {
+			if (arr[i] > arr[j]) swap(&arr[i], &arr[j]);         //받아온 수들을 먼저 오름차순으로 정렬
+		}
+	}
+
+
+	while (1) {
+
+		total = 0;
+		for (i = 1; i < n; i++) {                              //순열의 이웃항끼리의 차의 절대값의 합을 구하는 과정
+			total += sub(arr[i - 1], arr[i]);
+		}
+		if (max < total) max = total;
+
+		for (i = n - 2; i >= 0; i--) {                           //순열을 한바퀴 도는 과정. 결과적으로 내림차순으로 나타날 것!
+			if (i == 0 && arr[i] >= arr[i + 1]) flag++;
+			else if (arr[i] >= arr[i + 1]) continue;
+			else if (arr[i] < arr[i + 1]) {
+
+				for (j = n - 1; j >= i + 1; j--) {
+					if (arr[i] < arr[j]) {
+						swap(&arr[i], &arr[j]);
+						break;
+					}
+				}
+				k = i + 1;
+				j = n - 1;
+				while (k <= j) {
+					swap(&arr[k], &arr[j]);
+					k++;
+					j--;
+				}
+				break;
+			}
+		}
+		
+		if (flag != 0) break;
+	}
+	printf("%d", max);
+}
