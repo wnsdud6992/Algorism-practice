@@ -1,0 +1,43 @@
+
+
+* 비트연산
+2진수로 바꾸기: bin()
+8진수로 바꾸기: oct()
+16진수로 바꾸기:hex()
+다시 10진수:int(a,a의 진수)
+
+그러나 10진수를 컴퓨터는 자동 2진수로 읽어들이기에 비트연산자를 10진수에 적용한다면 자연스레 2진수 비트연산이 가능
+a=int(input()
+print(~a)
+~ not, & and, | or, ^ xor, <<2 left 2block shift, >>2 right 2block shift
+
+* 파이썬에서 3항 연산자 (c언어에서 ?,:연산자 대신 if, else문을 이용* 파이썬에서 3항 연산자 (c언어에서 ?,:연산자 대신 if, else문을 이용)
+a,b=map(int,input().split())
+print(a if(a>=b) else b)
+
+*다른진수로 입력받기
+a=int(input(),16) A입력시 16진법 10으로 들어온다.
+
+*1부터 29까지 수안에 3, 6, 9가 있는지 판별-> %10해서 나머지!
+if //10 해서 3,6,9가 나오면-> %10해서 박수 두번
+
+*출력시에 %로 출력하는 방법을 format보다 우선시하자. 출력 변수 타입을 명시해주기에 속도도 빠르고 명시적이다.
+
+*사용자로부터 세 수를 입력받고 세수의 최소 공배수 찾기(6091) -- 세수중 최소값을 n배 시켜주면서 최소공배수를 찾는 방법.
+a,b,c=map(int,input().split())
+arr=[a,b,c]
+d=min(arr)
+i=2
+while 1:
+    if(d*i)%a==0 and (d*i)%b==0 and (d*i)%c==0:
+        break
+    else: i+=1
+print(d*i)
+
+*파이썬에서 print("")자체로 enter기능 -> print("\n")하면 두줄 띄어쓰기가 되버림*파이썬에서 print("")자체로 enter기능 -> print("\n")하면 두줄 띄어쓰기가 되버림
+
+*파이썬에서 2차원 배열 -> arr=[[]]
+2차원 배열 전체 입력받을 때
+for i in range(19):
+    arr.append(list(map(int,input().split()))) #한 row씩 한번에 받아 저장한다.
+    
