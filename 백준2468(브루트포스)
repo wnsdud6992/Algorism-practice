@@ -1,0 +1,54 @@
+--안전 영역--
+nxn배열의 각 요소값을 받고 임의의 수보다 낮은 지역은 삭제시키고 분리된 지역의 개수를 출력하는 문제.
+모든 경우를 따지지만 결국 bfs 또는 dfs를  통해 인접지역을 순회하는 과정이 필요.
+bfs인경우 최단거리 문제에서는 유용하지만 이런 문제에서는 유용한가 싶다는 
+
+
+from collections import deque
+import copy
+import sys
+input=sys.stdin.readline
+q=deque()
+n=int(input())
+m=0
+arr=[list(map(int,input().split())) for _ in range(n)]
+brr=[[0]*n for _ in range(n)]
+
+def bfs(br):
+    x_next=[1,-1,0,0]
+    y_next=[0,0,1,-1]
+    total=0
+    for a in range(n):
+        for b in range(n):
+            if br[a][b]==0:
+                br[a][b]=1
+                q.append((a,b))
+                total+=1
+            while q:
+                y,x=q.popleft()
+                for i in range(4):
+                    y_n=y+y_next[i]
+                    x_n=x+x_next[i]
+                    if y_n<0 or y_n>=n or x_n<0 or x_n>=n or br[y_n][x_n]==1: continue
+                    if br[y_n][x_n] == 0:
+                        br[y_n][x_n]=1
+                        q.append((y_n,x_n))
+    return total
+
+l=0
+for k in arr:
+    a=max(k)
+    l=max(a,l)
+
+for i in range(l):
+    arr1=copy.deepcopy(arr)
+    brr1=copy.deepcopy(brr)
+    for a in range(n):
+        for b in range(n):
+            if arr1[a][b]<=i:
+                brr1[a][b]=1
+    br=copy.deepcopy(brr1)
+    total=bfs(br)
+    m=max(m,total)
+print(m)
+
