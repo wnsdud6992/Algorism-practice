@@ -1,0 +1,64 @@
+--로봇청소기--
+문제에서 주어진 조건에 맞게 구현하면 되는 간단한 시뮬레이션+bfs문제이다.
+문제가 어렵진 않으나 실수 할 만한 부분을 조심해야 한다. 특히 좌표축에서 북으로 가는것은 y축으로 -1만큼 가는 것이고 남으로 가는것은 y축으로 +1만큼 가는것이다.
+동쪽은 x로 +1 서쪽은 x로 -1이다. 이 개념을 실수하여 1시간 이상을 헤맸다.
+두번째로 n_x는 기존 x에 next_x라는 네방향중 어디로 갈지 +1한 값으로 다음 이동 좌표이다. 그런데 이것을 next_x와 혼동하여 사용하는 바람에 문제가 발생하였다.
+
+bfs구현에 대해서는 이제 문제가 없어 보이나 문제 조건에 대해 지속적인 실수가 나와 푸는데 시간이 오래걸렸다. 문제에 대해 제대로 파악하는 시간을 충분히 갖고 코드를 작성하자.
+
+
+from collections import deque
+n,m= map(int, input().split())
+r,c,d=map(int, input().split())
+arr=[list(map(int,input().split())) for _ in range(n)]
+q=deque([])
+q.append((r,c,d))
+total=0
+while q:
+    y,x,h=q.popleft()
+    if arr[y][x]==0:
+        arr[y][x]=3
+        total+=1
+
+    if h==0:
+        next_x=[-1,0,1,0]
+        next_y=[0,1,0,-1]
+    elif h==1:
+        next_x=[0,-1,0,1]
+        next_y=[-1,0,1,0]
+    elif h==2:
+        next_x=[1,0,-1,0]
+        next_y=[0,-1,0,1]
+    else:
+        next_x=[0,1,0,-1]
+        next_y=[1,0,-1,0]
+
+    flag=0
+    for i in range(4):
+        n_y=y+next_y[i]
+        n_x=x+next_x[i]
+        if n_x<0 or n_x>=m or n_y<0 or n_y>=n or arr[n_y][n_x]==1 or arr[n_y][n_x]==3: continue
+
+        if arr[n_y][n_x]==0:
+            if next_y[i]==0 and next_x[i]==1: n_h=1
+            elif next_y[i]==0 and next_x[i]==-1: n_h=3
+            elif next_y[i]==1 and next_x[i]==0: n_h=2
+            else: n_h=0
+            total+=1
+            q.append((n_y,n_x,n_h))
+            arr[n_y][n_x]=3
+            flag=1
+            break
+
+    if flag==0:
+        if h==0 and y+1<n and arr[y+1][x]!=1:
+            q.append((y+1,x,h))
+        elif h==1 and x-1>=0 and arr[y][x-1]!=1:
+            q.append((y,x-1,h))
+        elif h==2 and y-1>=0 and arr[y-1][x]!=1:
+            q.append((y-1,x,h))
+        elif h==3 and x+1<m and arr[y][x+1]!=1:
+            q.append((y,x+1,h))
+        else: break
+
+print(total)
