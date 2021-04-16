@@ -1,0 +1,40 @@
+--주사위 굴리기--
+주사위를 지도에 굴려서 조건에 맞게 구현하면된다.
+조심해야 했던 사항은 먼저 주사위를 상하로 굴릴때는 일렬로 된 4개만 바꿔주면 되지만 좌우로 굴릴때는 좌우 3개와 함께 가장 밑에 있는 면을 수정해야한다.
+두번째로 빼먹은 조건이 없는지 잘 확인해야한다. 
+
+
+n,m,y,x,k=map(int, input().split())
+arr=[list(map(int,input().split()))for _ in range(n)]
+comand=list(map(int,input().split()))
+d=[[0]*3 for _ in range(4)]
+
+def dice(y,x):
+    if (y,x)==(1,0):
+        d[0][1],d[1][1],d[2][1],d[3][1]=d[3][1],d[0][1],d[1][1],d[2][1]
+    elif (y,x)==(-1,0):
+        d[0][1],d[1][1],d[2][1],d[3][1]=d[1][1],d[2][1],d[3][1],d[0][1]
+    elif (y,x)==(0,1):
+        d[1][0],d[1][1],d[1][2],d[3][1]=d[3][1],d[1][0],d[1][1],d[1][2]       //좌 우로 굴리는 경우 주사위 모양이 어떻게 되는지 잘 파악해야함
+    else: d[1][0],d[1][1],d[1][2],d[3][1]=d[1][1],d[1][2],d[3][1],d[1][0]
+
+
+next_x=[1,-1,0,0]
+next_y=[0,0,-1,1]
+for i in comand:
+    n_y=y+next_y[i-1]
+    n_x=x+next_x[i-1]
+    if n_y>=0 and n_x>=0 and n_y<n and n_x<m:
+        y,x=n_y,n_x
+        dice(next_y[i-1],next_x[i-1])
+        if arr[y][x]==0:
+            arr[y][x]=d[3][1]
+        else:
+            d[3][1]=arr[y][x]
+            arr[y][x]=0
+        print(d[1][1])
+    else: continue
+
+
+        
+    
