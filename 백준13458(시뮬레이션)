@@ -1,0 +1,18 @@
+--시험감독--
+한 시험장에 a명있을 때 총감독+부감독의 최소값구하기.
+문제는 굉장히 쉽고 간단했다. 그러나 히든 케이스를 통과하려면 모든 경우를 다 따져서 이를 통과해야한다.(테스트 케이스는 모든 경우 포함x)
+이 경우 총감독관이 감시 숫자가 한 반의 인원을 넘어가는 경우를 따로 고려해주어야 한다.
+
+
+n=int(input())
+arr=list(map(int,input().split()))
+b,c=map(int,input().split())
+total=0
+for i in arr:
+    x=i-b
+    total+=1
+    if x<0: x=0
+    if x%c==0:
+        total+=x//c
+    else: total+=(x//c+1)
+print(total)
