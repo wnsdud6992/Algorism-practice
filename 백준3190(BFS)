@@ -1,0 +1,67 @@
+--뱀--
+BFS를 이용하여 문제 조건에 따라 구현하는 문제이다. 구현은 40분이면 끝냈지만 에러를 잡지 못해 2시간이나 걸렸다.
+실수 1: 사과가 없는데 이전에 사과를 먹은적이 있는 경우 꼬리부분을 날렸으면 머리부분에서 POP된것을 더하고 새로운 NEXT머리를 넣어줘여 하는데 POP된것을 다시 더하지 않았다.
+실수 2: 사과를 먹었으면 먹었다고 표시를 해야한다. 그렇지 않으면 뱀이 돌다가 다시 그자리로 오는 경우 몸이 더 길어지게 된다.
+
+
+from collections import deque
+q=deque()
+next_x=[1,0,0,-1]
+next_y=[0,1,-1,0]
+n=int(input())
+arr=[[0]*n for _ in range(n)]
+k=int(input())
+for i in range(k):
+    a,b=map(int,input().split())
+    arr[a-1][b-1]=1
+l=int(input())
+direct=[]
+for i in range(l):
+    c,d=input().split()
+    direct.append([int(c),d])
+num=0
+sec=0
+w=0
+q.append((0,0))
+while 1:      //BFS시작
+    y,x=q.pop() 
+    n_y=y+next_y[w]
+    n_x=x+next_x[w]
+    sec+=1
+    if n_y<0 or n_y>=n or n_x<0 or n_x>=n or (n_y,n_x) in q:   //반복문 탈출조건 즉 게임이 끝날 조건
+        break
+    if arr[n_y][n_x]==1:
+        q.append((y,x))
+        q.append((n_y,n_x))
+        arr[n_y][n_x]=0    //사과를 먹었으면 배열에서 없애줘야한다.
+    else:
+        if q: 
+            q.popleft()
+            q.append((y,x))             //n_y, n_x를 구하기 위해서 상단에 pop하여 확인하는 용도기에 다시 넣어줘야 뱀이 연결된 상태를 유지할 수 있다.
+            q.append((n_y,n_x))
+        else:
+            q.append((n_y,n_x))
+
+    if l-1>=num and sec==direct[num][0]:
+        if direct[num][1]=='L':
+            if w==0:
+                w=2
+            elif w==1:
+                w=0
+            elif w==2:
+                w=3
+            else:
+                w=1
+        elif direct[num][1]=='D':
+            if w==0:
+                w=1
+            elif w==1:
+                w=3
+            elif w==2:
+                w=0
+            else:
+                w=2
+        num+=1
+print(sec)
+
+
