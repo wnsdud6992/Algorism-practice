@@ -1,0 +1,87 @@
+--경사로--
+풀어본 시뮬레이션 문제중에 가장 복잡했던거 같다. 그러나 그렇다고 엄청 복잡한 것은 아니다.
+단지 따져줘야할 조건이 많을 뿐이다. 문제이해를 제대로 했고 코드 작성시 복붙하는 과정에서 실수하지 않았다면 1시간 반이면 충분했지만
+tmp에 1을 넣어주어야 할 것을 arr로 잘못 작성함으로써 이 하나의 오류를 찾느라 1시간을 소비했다.
+결론: 모든 조건을 하나하나 따져주고 테스트케이스 통과시 다른 모든 조건에 맞게 구현했는지 확인할 것.
+
+n,l=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(n)]
+tmp=[[0]*n for _ in range(n)]
+total=0
+
+for i in range(n):
+    for j in range(1,n):
+        flag=0
+        if arr[i][j-1]==arr[i][j]:
+            if j==n-1: total+=1
+            continue
+        elif arr[i][j-1]>arr[i][j]:
+            if arr[i][j-1]-arr[i][j]>1:
+                break
+            else:
+                if n-j>=l and j+l<=n:
+                    for a in range(l):
+                        if arr[i][j]!=arr[i][j+a] or tmp[i][j+a]==1:
+                            flag+=1
+                    if flag==0: 
+                        for b in range(l):
+                            tmp[i][j+b]=1
+                        if j==n-1: total+=1
+                        continue
+                    else: break
+                else: break
+        elif arr[i][j-1]<arr[i][j]:
+            if arr[i][j]-arr[i][j-1]>1:
+                break
+            else: 
+                if j>=l and j-1>=0:
+                    for a in range(l):
+                        if arr[i][j-1]!=arr[i][j-1-a] or tmp[i][j-1-a]==1:
+                            flag+=1
+                    if flag==0: 
+                        for b in range(l):
+                            tmp[i][j-1-b]=1
+                        if j==n-1: total+=1
+                        continue
+                    else: break
+                else: break 
+
+tmp=[[0]*n for _ in range(n)]
+        
+for j in range(n):
+    for i in range(1,n):
+        flag=0
+        if arr[i-1][j]==arr[i][j]:
+            if i==n-1: total+=1
+            continue
+        elif arr[i-1][j]>arr[i][j]:
+            if arr[i-1][j]-arr[i][j]>1:
+                break
+            else:
+                if n-i>=l:
+                    for a in range(l):
+                        if arr[i][j]!=arr[i+a][j] or tmp[i+a][j]==1:
+                            flag+=1
+                    if flag==0:
+                        for b in range(l):
+                            tmp[i+b][j]=1 
+                        if i==n-1: total+=1
+                        continue
+                    else: break
+                else: break
+        elif arr[i-1][j]<arr[i][j]:
+            if arr[i][j]-arr[i-1][j]>1:
+                break
+            else: 
+                if i>=l:
+                    for a in range(l):
+                        if arr[i-1][j]!=arr[i-1-a][j] or tmp[i-1-a][j]==1:
+                            flag+=1
+                    if flag==0: 
+                        for b in range(l):
+                            tmp[i-1-b][j]=1
+                        if i==n-1: total+=1
+                        continue
+                    else: break
+                else: break 
+print(total)
