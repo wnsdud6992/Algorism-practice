@@ -1,0 +1,42 @@
+--드래곤 커브--
+드래곤 커브를 그리는 규칙만 발견하면 구현하는데 크게 어렵진 않다.
+그러나 또하나 실수. 주어진 조건을 잘봐야 한다. 2차원배열의 크기가 101*101인데 잘못보고 100*100이라고 하여 index error가 났다.
+
+드래곤커브는 특징이 d가 2 이상이면 90도 돌린후 그릴때 새로 그리는 반은 이전 경로의 반대로 그리고 나머지는 기존경로와 같은 방향으로 그리면된다.
+이를 위해 새로운 경로를 그릴때 2개의 for문으로 나누어 90도 돌아간 드래곤커브를 그리면된다.
+네꼭지점이 드래곤커브이면 되니까 굳이 선분을 그릴생각하지 않고 드래곤커브인 꼭지점을 1로 표시하였다.
+
+n=int(input())
+arr=[list(map(int,input().split()))for _ in range(n)]
+m=[[0]*101 for _ in range(101)]
+dx=[1,0,-1,0]
+dy=[0,-1,0,1]
+
+def dragon(x,y,d,g):
+    tmp=[]
+    if g==0:
+        tmp.append((dy[d],dx[d]))
+    elif g==1:
+        tmp.append((dy[d],dx[d]))
+        tmp.append((dy[(d+1)%4],dx[(d+1)%4]))
+    else:
+        tmp.append((dy[d],dx[d]))
+        tmp.append((dy[(d+1)%4],dx[(d+1)%4]))
+        for i in range(2,g+1):
+            for j in range(2**(i-2)):
+                tmp.append((tmp[j][0]*(-1),tmp[j][1]*(-1)))
+            for j in range(2**(i-2),2**(i-1)):
+                tmp.append((tmp[j][0],tmp[j][1]))
+    m[y][x]=1
+    for i in tmp:
+        y=y+i[0]
+        x=x+i[1]
+        m[y][x]=1
+total=0
+for i in arr:
+    dragon(i[0],i[1],i[2],i[3])
+for i in range(100):
+    for j in range(100):
+        if m[i][j]==1 and m[i+1][j]==1 and m[i][j+1]==1 and m[i+1][j+1]==1:
+            total+=1
+print(total)
