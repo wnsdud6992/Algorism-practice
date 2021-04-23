@@ -1,0 +1,85 @@
+--감시--
+최근 문제중에 가장 어렵다고 느꼈고 코드도 긴 문제였다. 그러나 구현해야할 내용은 크게 어려운것이 아니라 더 답답했다.
+우선 브루트포스는 크게 3가지 정도로 종류를 나눌 수 있다곳 생각한다. 
+첫째, 나뉘는 가지수가 적어 모든 경우수를 코드로 나눠서 구현 or 일부 리스트화하여 반복문으로 구현
+둘째, 나타날 수 있는 경우의 수를 itertools의 permutations이나 combinations함수를 이용하여 리스트에 넣고 이를 반복문으로 구현
+셋째, 나타날 수 있는 가지수가 굉장히 많고, 순열과 조합으로 모든 항목을 나타내기 어려운경우 dfs(백트래킹)로 구현한다. 이 감시 문제가 대표적이다
+이 문제는 대표적인 dfs(백트래킹)기법을 이용한 문제라고 생각한다. cctv 1~5번까지 구현 형태도 다르고 반복수도 다르기에, 
+2차원 배열에 존재하는 모든 cctv를 하나의 리스트에 먼저 모으는 일부터 시작한다. 그후 cctv마다 관찰할 수 있는 모든 방법에 따라 관찰하고 그 각각의 경우에 대해 하위dfs,
+리스트의 두번째 cctv에 대한 모든 경우를 또 돌려본다. 이렇게 첫번째 부터 n개의 cctv에 대해 모든 경우수를 조사해보고 2차원 배열에 존재하는 0의 개수가 최소인 경우를 골라 출력한다.
+그러기 위해 copy.deepcopy를 이용하여 모든 경우에 대해 이차원배열을 복사하여 구현함으로써 0의 개수가 최소인 경우를 찾는다.
+
+이 문제를 구현하는 또 다른 핵심 기법으로는 각 cctv가 관찰하는 방법을 w라는 리스트에 전부 적어놓은 것이다. 이렇게 미리 모든 경우를 적어놓음으로써 각 경우를 dx,dy에서 빼다 쓰다
+실수하는 것을 없앨 수 있다.
+
+import copy
+from collections import deque
+q=deque()
+w=[[(0,-1),(1,0),(0,1),(-1,0)],[[(-1,0),(1,0)],[(0,1),(0,-1)]],[[(-1,0),(0,1)],[(0,1),(1,0)],[(1,0),(0,-1)],[(0,-1),(-1,0)]],[[(-1,0),(0,1),(1,0)],[(0,1),(1,0),(0,-1)],[(1,0),(0,-1),(-1,0)],[(0,-1),(-1,0),(0,1)]],[(-1,0),(0,1),(1,0),(0,-1)]]
+n,m=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(n)]
+next_x=[1,0,-1,0]
+next_y=[0,1,0,-1]
+Min=1000000
+
+def dfs(a,arr):
+    global Min
+    if a==len(q):
+        total=0
+        for i in range(n):
+            for j in range(m):
+                if arr[i][j]==0:
+                    total+=1
+        Min=min(total,Min)
+    else:
+        i=q[a]
+        if i[0]==1:
+            for j in w[0]:
+                ar=copy.deepcopy(arr)     #모든 경우에 대해 다른 ar을 만들어주어야 비교가능
+                line(j,ar,q[a][1],q[a][2])
+                dfs(a+1,ar)
+
+        elif i[0]==2:
+            for j in w[1]:
+                ar=copy.deepcopy(arr)
+                line(j[0],ar,q[a][1],q[a][2])
+                line(j[1],ar,q[a][1],q[a][2])
+                dfs(a+1,ar)
+        
+        elif i[0]==3:
+            for j in w[2]:
+                ar=copy.deepcopy(arr)
+                line(j[0],ar,q[a][1],q[a][2])
+                line(j[1],ar,q[a][1],q[a][2])
+                dfs(a+1,ar)
+
+        elif i[0]==4:
+            for j in w[3]:
+                ar=copy.deepcopy(arr)
+                line(j[0],ar,q[a][1],q[a][2])
+                line(j[1],ar,q[a][1],q[a][2])
+                line(j[2],ar,q[a][1],q[a][2])
+
+                dfs(a+1,ar)
+
+        elif i[0]==5:
+            ar=copy.deepcopy(arr)        #5번 cctv는 네방향 모두 돌아보는 것이 하나의 경우임으로
+            for j in w[4]:
+                line(j,ar,q[a][1],q[a][2])
+                dfs(a+1,ar)
+
+def line(k,ar,y,x):             #주어진 방향으로 조건에 어긋날때까지 탐색
+    while 1: 
+        y=y+k[0]
+        x=x+k[1]
+        if y<0 or y>=n or x<0 or x>=m or ar[y][x]==6: break
+        elif ar[y][x]==0:
+            ar[y][x]='#'
+        else: continue
+
+for i in range(n):
+    for j in range(m):
+        if arr[i][j] in [1,2,3,4,5]:
+            q.append((arr[i][j],i,j))
+dfs(0,arr)
+print(Min)
