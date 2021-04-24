@@ -1,0 +1,61 @@
+--미세먼지 안녕--
+전형적인 시뮬레이션 문제로 모든 경우에 대해 실수없이 구현해야 하는 문제이다. 이문제와 같이 2차원 배열에 대해 각 요소에 동시에 접근해야 할 필요가 있는 경우
+반복문 두번으로 순차적으로 돌아선 풀지 못하기에 각 요소를 리스트에 빼놓고 각각에 대해 따로 동작시켜야한다.
+실수없이 푼다면 1시간 내외에 해결 가능할 문제이다. 
+
+
+import copy
+r,c,t=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(r)]
+
+dy=[1,-1,0,0]
+dx=[0,0,1,-1]
+for i in range(t):
+    mise=[]
+    g=[]
+    for y in range(r):
+        for x in range(c):
+            if arr[y][x]>0:
+                mise.append((arr[y][x],y,x))
+            elif arr[y][x]==-1:
+                g.append(y)
+    tmp=[[0]*c for _ in range(r)]
+    for k in mise:
+        num=0
+        y,x=k[1],k[2]
+        for t in range(4):
+            ny=y+dy[t]
+            nx=x+dx[t]
+            if ny<0 or ny>=r or nx<0 or nx>=c or arr[ny][nx]==-1: continue
+            else:
+                num+=1
+                tmp[ny][nx]=tmp[ny][nx]+k[0]//5
+        tmp[y][x]=tmp[y][x]+k[0]-(k[0]//5)*num
+    
+    for i in range(g[0]-1,-1,-1):
+        tmp[i][0]=tmp[i-1][0]
+    for i in range(1,c):
+        tmp[0][i-1]=tmp[0][i]
+    for i in range(1,g[0]+1):
+        tmp[i-1][c-1]=tmp[i][c-1]
+    for i in range(c-2,0,-1):
+        tmp[g[0]][i+1]=tmp[g[0]][i]
+    
+    for i in range(g[1]+1,r-1):
+        tmp[i][0]=tmp[i+1][0]
+    for i in range(0,c-1):
+        tmp[r-1][i]=tmp[r-1][i+1]
+    for i in range(r-1,g[1],-1):
+        tmp[i][c-1]=tmp[i-1][c-1]
+    for i in range(c-1,1,-1):
+        tmp[g[1]][i]=tmp[g[1]][i-1]
+    tmp[g[0]][0],tmp[g[1]][0]=-1,-1
+    tmp[g[0]][1],tmp[g[1]][1]=0,0
+    arr=copy.deepcopy(tmp)
+
+total=0
+for i in range(r):
+    for j in range(c):
+        if arr[i][j]!=-1:
+            total+=arr[i][j]
+print(total)
