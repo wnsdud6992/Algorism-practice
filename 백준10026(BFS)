@@ -1,0 +1,54 @@
+--적록색약--
+주어진 RGB로 채워진 2차원 배열에서 일반인이 보았을때 색깔별 영역의 수와 적록색약이 있는 사람이 봤을 때 색깔별 영역의 수를 출력하는 문제.
+bfs로 풀면 쉽게 풀린다. 다른 방법으로는 bfs를 적록색약을 위한 사람꺼 만드는 대신 배열에서 g값을 r로 바꿔서 정상인과 똑같은 bfs를 진행해주면 된다. 
+
+from collections import deque
+import copy
+n=int(input())
+arr=[list(''.join(input())) for _ in range(n)]
+arr1=copy.deepcopy(arr)
+nom=0
+dis=0
+dx=[0,0,1,-1]
+dy=[1,-1,0,0]
+nq=deque()
+dq=deque()
+def normal(arr,c):
+    while nq:
+        y,x=nq.popleft()
+        arr[y][x]=0
+        for i in range(4):
+            ny=y+dy[i]
+            nx=x+dx[i]
+            if ny<0 or nx<0 or ny>=n or nx>=n:continue
+            if arr[ny][nx]==c:
+                nq.append((ny,nx))
+                arr[ny][nx]=0
+
+def disable(arr1,c):
+    color=[]
+    color.append(c)
+    if c=='R': color.append('G')
+    elif c=='G': color.append('R')
+    while dq:
+        y,x=dq.popleft()
+        arr1[y][x]=0
+        for i in range(4):
+            ny=y+dy[i]
+            nx=x+dx[i]
+            if ny<0 or nx<0 or ny>=n or nx>=n:continue
+            if arr1[ny][nx] in color:
+                dq.append((ny,nx))
+                arr1[ny][nx]=0
+
+for i in range(n):
+    for j in range(n):
+        if arr[i][j]!=0:
+            nq.append((i,j))
+            nom+=1
+            normal(arr,arr[i][j])
+        if arr1[i][j]!=0:
+            dq.append((i,j))
+            dis+=1
+            disable(arr1,arr1[i][j])
+print(nom, dis)
