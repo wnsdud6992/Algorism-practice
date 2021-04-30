@@ -1,0 +1,48 @@
+--탈출--
+물난리가 난 고슴도치 마을에서 고슴도치가 대피하는 문제로 물도 사방으로 퍼지고 이를 피해 고슴도치는 굴속으로 들어가야 하는데 이때 걸리는 시간을 구하는 문제.
+고슴도치만 bfs를 할 것이 아니라 물도 큐에 넣어 bfs를 돌리면 된다. 문제는 bfs만 알고있다면 큰 문제없이 풀 수 있다.
+그런데 이번에 실수한것 처럼 bfs진행 시 고슴도치가 지나온 자리에 대해 표시를 해주지 않으면 배열의 크기가 커지면 메모리 에러가 발생하게 됨으로 무.조.건
+고슴도치가 지나간 길은 표시해주어야 한다!!
+
+from collections import deque
+r,c=map(int,input().split())
+arr=[list(''.join(input())) for _ in range(r)]
+dy=[1,-1,0,0]
+dx=[0,0,1,-1]
+w=deque()
+q=deque()
+for i in range(r):
+    for j in range(c):
+        if arr[i][j]=='S':
+            q.append((i,j,0))
+            arr[i][j]=0             //고슴도치가 지나간 길은 0으로 표시
+        if arr[i][j]=='*':
+            w.append((i,j))
+
+def bfs():
+    total=0
+    while q:
+        for i in range(len(w)):
+            y,x=w.popleft()
+            for k in range(4):
+                ny=y+dy[k]
+                nx=x+dx[k]
+                if ny<0 or ny>=r or nx<0 or nx>=c or arr[ny][nx]=='D' or arr[ny][nx]=='X' :continue
+                if arr[ny][nx]=='.':
+                    w.append((ny,nx))
+                    arr[ny][nx]='*'
+        for j in range(len(q)):
+            a,b,t=q.popleft()
+            for l in range(4):
+                na=a+dy[l]
+                nb=b+dx[l]
+                nt=t+1
+                if na<0 or na>=r or nb<0 or nb>=c or arr[na][nb]=='*' or arr[na][nb]=='X'or arr[na][nb]==0: continue
+                if arr[na][nb]=='D':                   //고슴도치가 지나온 길이 아니고 돌이 어니고 물이 아니면 그 길을 지나갈 수 있다.
+                    return nt
+                elif arr[na][nb]=='.':
+                    q.append((na,nb,nt))
+                    arr[na][nb]=0
+    return 'KAKTUS'
+total=bfs()
+print(total)
