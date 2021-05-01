@@ -1,0 +1,34 @@
+--촌수계산--
+
+주어진 데이터에 의해 원하는 두사람의 촌수를 구하는 문제
+BFS로 풀면 어렵지 않은 문제이다. 게다가 100명이라는 한정이 있기에 각각을 배열의 한 행으로 보고 연결된 요소를 각 행의 요소값으로 갖게 한다면
+쉽게 구할 수 있다. 제일 중요한 것은 bfs는 visit을 항상 명시해야한다. 이미 방문한 번호의 사람은 다시 방문하지 않게 하여 큐에 메모리 초과를 방지한다.
+
+
+from collections import deque
+q=deque()
+n=int(input())
+arr=[[] for _ in range(n+1)]
+visit=[0 for _ in range(n+1)]
+a,b=map(int,input().split())
+k=int(input())
+for i in range(k):
+    x,y=map(int,input().split())
+    arr[x].append(y)
+    arr[y].append(x)
+q.append((a,0))
+visit[a]=1
+def bfs():
+    while q:
+        x,t=q.popleft()
+        t+=1
+        for i in arr[x]:
+            if visit[i]==1: continue
+            else:
+                visit[i]=1
+                if i==b: return t
+                else: q.append((i,t))
+    return -1
+
+ans=bfs()
+print(ans)
