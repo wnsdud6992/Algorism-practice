@@ -1,0 +1,103 @@
+--인구이동--
+인접 나라와 인구차이가 주어진 값내에 날 경우 연결하여 인구를 동일하게 맞춰주는 문제.
+사실 아이디어는 크게 어렵지 않았다. 그러나 디버깅에서 엄청 오래걸렸다. 그 이유는 bfs로 들어가는 조건을 처음에는 이웃 나라와 인구수 차이가 조건에 맞는 경우만 넣을라고 했다.
+그렇게 함으로써 bfs를 조금만 돌릴라고 했는데 오른쪽과 아래만 생각해주는 아이디어에 문제가 있어 9%를 넘지 못했다.
+그래서 visit하지 않은 나라는 전부 bfs를 통해 이웃나라와 인구수 차이를 검색한다. 만족하는 나라가 있는 경우 total에 1을 더해 인구이동 날짜를 추가해준다. 
+이 문제를 통해 bfs에 넣는 조건을 제대로 따져야 할 것이며 그러지 못한다면 모든 항에 대해 검사해 봐야 할 것이다
+하단에 초기 코드이다. 나중에 다시한번 디버깅해봐야겠다.
+
+from collections import deque
+q=deque()
+dy=[1,0,-1,0]
+dx=[0,1,0,-1]
+n,l,r=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(n)]
+total=0
+def bfs(i,j):
+    index=[]
+    val=[]
+    index.append((i,j))
+    val.append(arr[i][j])
+    while q:
+        y,x=q.popleft()
+        for i in range(4):
+            ny=y+dy[i]
+            nx=x+dx[i]
+            if ny<0 or nx<0 or ny>=n or nx>=n or visit[ny][nx]==1: continue
+            elif visit[ny][nx]==0 and abs(arr[y][x]-arr[ny][nx])>=l and abs(arr[y][x]-arr[ny][nx])<=r:
+                q.append((ny,nx))
+                visit[ny][nx]=1
+                index.append((ny,nx))
+                val.append(arr[ny][nx])
+    avg=sum(val)//len(val)
+    for i in index:
+        arr[i[0]][i[1]]=avg
+    if len(val)>1: 
+        return 1
+c=0
+while 1:
+    flag=0
+    visit=[[0]*n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if visit[i][j]==0:
+                visit[i][j]=1
+                q.append((i,j))
+                c=bfs(i,j)    
+                if c==1:
+                    flag+=1
+                                                           
+    if flag==0: break 
+    else: total+=1
+print(total)
+
+
+
+-틀린 코드-
+from collections import deque
+q=deque()
+dy=[1,0,-1,0]
+dx=[0,1,0,-1]
+n,l,r=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(n)]
+total=0
+def bfs(i,j):
+    index=[]
+    val=[]
+    index.append((i,j))
+    val.append(arr[i][j])
+    while q:
+        y,x=q.popleft()
+        for i in range(4):
+            ny=y+dy[i]
+            nx=x+dx[i]
+            if ny<0 or nx<0 or ny>=n or nx>=n or visit[ny][nx]==1: continue
+            elif visit[ny][nx]==0 and abs(arr[y][x]-arr[ny][nx])>=l and abs(arr[y][x]-arr[ny][nx])<=r:
+                q.append((ny,nx))
+                visit[ny][nx]=1
+                index.append((ny,nx))
+                val.append(arr[ny][nx])
+    avg=sum(val)//len(val)
+    for i in index:
+        arr[i[0]][i[1]]=avg
+
+while 1:
+    flag=0
+    visit=[[0]*n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if visit[i][j]==0:
+                for k in range(2):
+                    ni=i+dy[k]
+                    nj=j+dx[k]
+                    if ni<0 or nj<0 or ni>=n or nj>=n or visit[ni][nj]==1: continue
+                    elif visit[ni][nj]==0 and abs(arr[i][j]-arr[ni][nj])>=l and abs(arr[i][j]-arr[ni][nj])<=r:
+                        visit[i][j]=1
+                        q.append((i,j))
+                        flag+=1 
+                        bfs(i,j)    
+                                                           
+    if flag==0: break 
+    else: total+=1
+print(total)
+
