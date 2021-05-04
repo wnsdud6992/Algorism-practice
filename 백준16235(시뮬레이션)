@@ -1,0 +1,51 @@
+--나무 제테크--
+나무가 일년 주기로 계절에 따라 양분 먹고 분화하고 하는 과정을 구현하는 문제이다.
+구현은 어렵지 않은문제이다. 그러나 문제에서 말이 애매해서 잘못 이해해 오랜시간 디버깅에 쏟았다. 그러나 시간초과...
+배운점:
+1. 반복문 중에 배열에서 요소를 삭제할때 여러가지 방법이 존재(pop이든 slicing이든) 그러나 그 후 break을 써줘야 for문이 idx 오류가 안타나난다.
+2. 죽은 나무에 대해(더 이상 필요없는 요소)에 대해서는 0으로 둘것이 아니라 배열에서 없애야한다. 그래야 훨씬 큰 수의 반복문 시 시간오류가 나지 않는다.
+3. 문제를 제대로 파악하자..(나무가 양분이 부족한경우 남은것이라도 먹는게 아니라 먹지도 않고 죽는다. 따라서 양분이 어느정도 바닥에 남은 상태로 나무가 죽을 수 있다.)
+
+dy=[-1,-1,-1,0,0,1,1,1]
+dx=[-1,0,1,-1,1,-1,0,1]
+n,m,k=map(int,input().split())
+arr=[[[5] for _ in range(n)]for _ in range(n) ]
+plus=[list(map(int,input().split()))for _ in range(n)]
+dead=[]
+for i in range(m):
+    y,x,z=map(int,input().split())
+    arr[y-1][x-1].append(z)
+for p in range(k):
+    for i in range(n):
+        for j in range(n):
+            tmp=arr[i][j][0]
+            total=0
+            dead=[]
+            for t in range(len(arr[i][j])-1,0,-1):
+                if tmp-arr[i][j][t]<0:
+                    dead=arr[i][j][1:t+1]
+                    arr[i][j]=[tmp]+arr[i][j][t+1:]
+                    break
+                else: 
+                    tmp=tmp-arr[i][j][t]
+                    arr[i][j][t]+=1
+            for h in range(len(dead)):
+                total+=dead[h]//2
+            arr[i][j][0]=total+tmp
+           
+    for i in range(n):
+        for j in range(n):
+            for t in range(1,len(arr[i][j])):
+                if arr[i][j][t]!=0 and arr[i][j][t]%5==0:
+                    for v in range(8):
+                        ni=i+dy[v]
+                        nj=j+dx[v]
+                        if ni<0 or nj<0 or ni>=n or nj>=n: continue
+                        arr[ni][nj].append(1)
+            arr[i][j][0]+=plus[i][j]
+total=0
+for i in range(n):
+    for j in range(n):
+        total+=len(arr[i][j])
+print(total-n**2)
+
