@@ -1,0 +1,58 @@
+--치즈--
+치즈 조각이 주어졌을 때 외부공기에 닿는 부분은 1시간에 1칸씩 사라진다. 몇시간이 지나면 다 없어지고 다 없어지기 1시간 전에 남아있는 치즈 수
+구현은 어렵지 않은 bfs문제이지만 먼저 알고리즘을 생각할 때 어떤식으로 짜야쉬울지 시간이 조금 들었다. 결론적으로 외부 공기를 0대신 3으로 채우고 치즈에 구멍이나
+내부 공기가 외부 공기와 만나게 되면 3이 오염되도록 만들었다. 이때 큰 실수를 범했다
+while문을 돌면서 매번 공기에 닿는 치즈를 녹였다. 그러다 0을 만나면 bfs에 넣어줘 0을 3으로 오염시킨다. 근데 단순히 0을 만나는 조건이 치즈에 구멍이생긴게 아니라
+0을 만남과 동시에 그 치즈가 외부공기랑 맞닿아 있어서 녹는 치즈여야한다. 이렇게 로직이 문제가 생기면 컴파일에 오랜시간이 든다.
+
+from collections import deque
+q=deque()
+n,m=map(int,input().split())
+arr=[list(map(int,input().split()))for _ in range(n)]
+time=0
+dy=[0,0,1,-1]
+dx=[1,-1,0,0]
+q.append((0,0))
+def bfs():
+    while q:
+        y,x=q.popleft()
+        arr[y][x]=3
+        for i in range(4):
+            ny=y+dy[i]
+            nx=x+dx[i]
+            if 0<=ny<n and 0<=nx<m and arr[ny][nx]==0:
+                q.append((ny,nx))
+                arr[ny][nx]=3
+bfs() 
+indiv=[]
+while 1:
+    time+=1
+    total=0
+    touch=[]
+    for i in range(1,n-1):
+        for j in range(1,m-1):
+            if arr[i][j]==1:
+                total+=1
+                a,b=0,0
+                for k in range(4):
+                    ni=i+dy[k]
+                    nj=j+dx[k]
+                    if arr[ni][nj]==0 and (ni,nj) not in q:
+                        a=(ni,nj)
+                    if arr[ni][nj]==3:
+                        b+=1
+                        touch.append((i,j))
+                if a!=0 and b>0:
+                    q.append(a)
+
+    
+    indiv.append(total)
+    for h in touch:
+        arr[h[0]][h[1]]=3    
+    bfs()
+    if total==0:
+        print(time-1)
+        print(indiv[-2]) 
+        break
+        
+    
