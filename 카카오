@@ -1,0 +1,145 @@
+1. 영어로 된 숫자를 숫자로 바꾸는 문제로 쉬운 구현문제이다.
+def solution(s):
+    ans=[]
+    i=0
+    while i<len(s):
+        if s[i]=='z':
+            ans.append('0')
+            i+=4
+        elif s[i]=='o':
+            ans.append('1')
+            i+=3
+        elif s[i]=='t' and s[i+1]=='w':
+            ans.append('2')
+            i+=3
+        elif s[i]=='t' and s[i+1]=='h':
+            ans.append('3')
+            i+=5
+        elif s[i]=='f' and s[i+1]=='o':
+            ans.append('4')
+            i+=4
+        elif s[i]=='f' and s[i+1]=='i':
+            ans.append('5')
+            i+=4
+        elif s[i]=='s' and s[i+1]=='i':
+            ans.append('6')
+            i+=3
+        elif s[i]=='s' and s[i+1]=='e':
+            ans.append('7')
+            i+=5
+        elif s[i]=='e':
+            ans.append('8')
+            i+=5
+        elif s[i]=='n':
+            ans.append('9')
+            i+=4
+        else: 
+            a=s[i]
+            ans.append(a)
+            i+=1
+    ans=''.join(ans)    
+    return int(ans)
+    
+ 2.
+ 배열에서 인접 항을 확인하고 조건에 맞는지 결정하는 구현문제로 간단하다.
+ places=	[["POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"], ["POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"], ["PXOPX", "OXOXP", "OXPXX", "OXXXP", "POOXX"], ["OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"], ["PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"]]
+def solution(places):
+    dy=[0,0,1,-1,1,1,-1,-1,2,-2,0,0]
+    dx=[1,-1,0,0,1,-1,1,-1,0,0,2,-2]
+    answer = []
+    for place in places:
+        ox=1
+        for i in range(5):
+            for j in range(5):
+                if place[i][j]=='P':
+                    for k in range(12):
+                        flag=0
+                        ni=i+dy[k]
+                        nj=j+dx[k]
+                        if 0<=ni<5 and 0<=nj<5 and place[ni][nj]=='P':
+                            if 0<=k<=3:
+                                flag+=1
+                                break
+                            elif 4<=k<=7:
+                                if place[ni][j]=='X' and place[i][nj]=='X':
+                                    continue
+                                else:
+                                    flag+=1
+                                    break
+                            else:
+                                if place[(ni-i)//2+i][(nj-j)//2+j]=='X':
+                                    continue
+                                else: 
+                                    flag+=1
+                                    break
+                    if flag>0:
+                        ox=0
+                        answer.append(0)
+                        break
+            if ox==0:
+                break
+            
+        if ox==0:
+            continue
+        else: answer.append(ox)
+    return answer
+
+print(solution(places))
+
+3. 히든케이스에 대해서 반이상 맞지 못한 문제이다.
+구현속도도 dictionary로 arr를 구현했다면 훨씬 더 빨랐을 것이라는 생각이 들었다.
+
+def solution(n, k, cmd):
+    arr=[]
+    for i in range(n):
+        arr.append([i,i])
+    tmp=[]
+    answer = ''
+    for req in cmd:
+        if req[0]=='D':
+            k+=int(req[2])
+            if k>len(arr)-1:
+                k=len(arr)-1
+        elif req[0]=='U':
+            k-=int(req[2])
+            if k<0:
+                k=0
+        elif req[0]=='C':
+            a,b=arr.pop(k)
+            if k>len(arr)-1:
+                k-=1
+            else: 
+                for i in range(k,len(arr)):
+                    arr[i][0]-=1
+            tmp.append([a,b])
+
+        elif req[0]=='Z':
+            a,b=tmp.pop()
+            if b<arr[k][1]:
+                k+=1
+            if a>len(arr):
+                arr.append([len(arr),b])
+            else: 
+                arr.append([a,b])
+                l=len(arr)-1
+                while 1:
+                    if arr[l][1]<arr[l-1][1]:
+                        arr[l],arr[l-1]=arr[l-1],arr[l]
+                        arr[l][0]+=1
+                        l-=1
+                    else:
+                        break
+    j=0
+    for i in range(n):
+        if i==arr[j][1]:
+            answer=answer+'O'
+            j+=1
+        else:
+            answer=answer+'X'
+    return answer
+
+print(solution(8,2,["D 2","C","U 3","C","D 4","C","U 2","Z","Z","U 1","C"]))
+
+구현문제는 어느정도 손을 댔지만 가중치 있는 그래프문제나 이분그래프문제는 손을 대지도 못했다. 심지어 구현문제 중 하나도 제대로 풀지 못했다.
+더 많은 알고리즘 공부가 필요하다고 느꼈다..
+ 
