@@ -1,0 +1,35 @@
+--lv2의 첫번째문제--
+구현내용은 크게 어렵지않아 30분이내로 코드를 작성했다. 그러나 컴파일 과정에서 리스트와 문자열의 혼동으로 시간을 계속 잡아먹었다.
+결국 1번문제밖에 풀지 못했다. 
+가장 큰 실수로는 tmp1을 토대로 tmp2를 검색할 때 tmp1의 값이 중복되어 있다면 tmp2에서 1개만 존재하더라도 tmp1의 두개에 대해서 모두 tmp2에 있다고 인식하였다.
+이를 해결하기 위해 검출된 tmp2의 값은 없애주었다.
+사실 코드의 효율성면으로 봤을때는 형편없는 코드이다. dict형식으로 구성하였다면 tmp1,tmp2비교 검사시 효율성이 훨씬 좋았을 것이다.
+
+def solution(str1, str2):
+    st1=[]
+    st2=[]
+    for i in range(0,len(str1)-1):
+        if ('a'<=str1[i]<='z' or 'A'<=str1[i]<='Z') and ('a'<=str1[i+1]<='z' or 'A'<=str1[i+1]<='Z'):
+            st1.append(str1[i]+str1[i+1])
+    for i in range(0,len(str2)-1):
+        if ('a'<=str2[i]<='z' or 'A'<=str2[i]<='Z') and ('a'<=str2[i+1]<='z' or 'A'<=str2[i+1]<='Z'):
+            st2.append(str2[i]+str2[i+1])
+    tmp1=[]
+    tmp2=[]
+    for i in st1:
+        i=i.upper()
+        tmp1.append(i)
+    for i in st2:
+        i=i.upper()
+        tmp2.append(i)
+    t=len(tmp1)+len(tmp2)
+    gu=0
+    for i in tmp1:
+        if i in tmp2:
+            tmp2.remove(i)
+            gu+=1
+    s=t-gu
+    if s==0: answer=1*65536
+    else:
+        answer = int(gu/s*65536)
+    return answer
