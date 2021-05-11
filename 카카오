@@ -97,7 +97,7 @@ def solution(n, k, cmd):
     answer = ''
     for req in cmd:
         if req[0]=='D':
-            k+=int(req[2])
+            k+=int(req[2])     #나중에 깨달은 사실: req[2]만을 볼것이 아니다. 위아래로 이동하는 칸이 2자리수가 넘어간다면 문제가 됨으로 더 뒤에까지 확인해주었어야 한다..
             if k>len(arr)-1:
                 k=len(arr)-1
         elif req[0]=='U':
