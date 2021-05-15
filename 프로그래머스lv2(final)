@@ -1,0 +1,58 @@
+드디어 lv2를 시간안에 정확도 100으로 제출할 수 있었다. lv2문제는 어렵다기보다는 쉽지만 아는 내용을 빠르고 정확하게 구현할 수 있어야 시간안에 해결할 수 있었다.
+지금 생각해보면 카카오 1,2번이 lv1,2 하나씩 출제된 것 같다.
+
+(1)nxm행렬에서 같은 요소가 붙어있는 사각박스를 제거하고 밑에 것이 없으면 아래로 떨어져 다시 정렬한 후 검색하는 문제이다. 크게 주변 2x2요소가 같은지 확인하는 부분과
+삭제 후 배열 재정렬하는 부분으로 나뉜다. 2x2요소가 같은지 확인하고 바로 없애주는 것이 아니라 모든 배열을 순회하고 없애야한다. 그래야 2x2가 붙어있어도 문제없이 모두 제거 할 수
+있게 된다. 두번째로 제거된 항목이 있으면 배열을 아래로 내려 재정렬하느 과정에서 0을 만나면 한칸씩 밑으로 내려가고 가장위에 요소에 0을 채워넣어주는 형식으로 구현했다.
+이 문제는 board가 문자열로 들어오기에 요소 교체를 위해 list로 바꿔주는 작업이 선행되야 됐다.
+
+def solution(m, n, board):
+    answer = 0
+    dy=[0,1,0,1]
+    dx=[0,0,1,1]
+    for i in range(len(board)):
+        board[i]=','.join(board[i]).split(',')
+    print(board)
+    while 1:
+        tmp=[]
+        for i in range(m-1):
+            for j in range(n-1):
+                if board[i][j]==board[i+1][j]==board[i][j+1]==board[i+1][j+1]!=0:
+                    tmp.append((i,j))
+        if not tmp:
+            break
+        for k in tmp:
+            for i in range(4):
+                ny = k[0]+dy[i]
+                nx = k[1]+dx[i]
+                if board[ny][nx]!=0:
+                    board[ny][nx]=0
+                    answer+=1
+        
+        for i in range(n):
+            for j in range(m):
+                if board[j][i]==0:
+                    for k in range(j,-1,-1):
+                        board[k][i]=board[k-1][i]
+                    board[0][i]=0
+        print(board)
+    return answer
+print(solution(4,5,["CCBDE", "AAADE", "AAABF", "CCBBF"]))
+
+(2)  주어진 2진수의 0을 제거하고 남은 길이 값을 2진수화하는 과정을 반복해서 '1'을 만드는 문제이다. 어자피 내장함수 format을 사용하면 이진수가 문자열 형태로 주어지기에
+손쉽게 해결 할 수 있었다.
+
+def solution(s):
+    answer = [0,0]
+    while 1:
+        answer[0]+=1
+        tmp=0
+        for i in range(len(s)):
+            if s[i]=='0':
+                answer[1]+=1
+            else: tmp+=1
+        s=format(tmp,'b')
+        if s=='1':
+            break
+    return answer
+print(solution("01110"))
