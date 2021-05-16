@@ -1,0 +1,22 @@
+--타겟 넘버--
+주어진 n개의 숫자를 +-를 잘 조합하여 타겟숫자를 만드는 문제이다.
+처음에 n개의 숫자가 모두 같은 수인줄 알고 순열문제로 풀었다가 틀렸었다. 예시코드를 보고 문제를 이해하면 안되겠다.
+모든 +-를 다해본 결과를 큐에 저장하였다가 타겟넘버와 같은 값을 세는 bfs형식으로 문제를 풀었다.
+
+from collections import deque
+def solution(numbers, target):
+    q=deque()
+    q.append(0)
+    answer = 0
+    for i in numbers:
+        for k in range(len(q)):
+            a=q.popleft()
+            q.append(a+i)
+            q.append(a-i)
+    
+    for i in range(len(q)):
+        if q.popleft()==target:
+            answer+=1
+    
+    return answer
+print(solution([1, 1, 1, 1, 1],3))
