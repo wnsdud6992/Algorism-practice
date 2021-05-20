@@ -1,0 +1,40 @@
+--단어 변환--
+주어진 begin을 target으로 만드는데 words에 존재하는 단어들을 거쳐 만들 수 있다. 이때 지나갈 수 있는 단어는 기존 단어랑 1글자 차이인 경우만 가능하다.
+문제를 보고 든 생각은 먼저 기존 단어랑 1글자 차이만 나는 경우 지나갈 수 있다는 것이다. 차이가 나지 않는 동일 단어는 어자피 지나가게 되면 횟수만 더 쓴 꼴이므로
+지나갈 필요 없고 1개를 바꿔 지나갈 수 있는 경우는 모두 바꿔보려했기에 diff라는 함수를 생성하엿다. 생각해보면 이렇게 여러개로 퍼저나갔을 때 목표점으로 최단거리로
+도착하는 문제는 bfs로 해결할 수 있기에 큐를 만들어 bfs로 해결! words중 지나간 문자열은 삭제했다. 다른 경로에서 삭제한 경로를 지나가려한다는건 이미지 그보다 적은
+횟수로 그 경로를 지나온 경우이므로 고려해줄 필요가 없다.
+
+from collections import deque
+q=deque()
+def bfs(words,target):
+    while q:
+        w,n=q.popleft()
+        if w==target:
+            return n
+        tmp=[]
+        for i in words:
+            if diff(w,i)==1:
+                q.append((i,n+1))
+                tmp.append(i)
+        for i in tmp:            
+            words.remove(i)
+    return 0
+def diff(a,b):
+    num=0
+    for i in range(len(a)):
+        if a[i]!=b[i]:
+            num+=1
+    return num
+            
+def solution(begin, target, words):
+    answer = 0
+    tmp=[]
+    for i in words:
+        if diff(begin,i)==1:
+            q.append((i,1))
+            tmp.append(i)
+    for i in tmp:            
+        words.remove(i)
+    answer=bfs(words,target)
+    return answer
