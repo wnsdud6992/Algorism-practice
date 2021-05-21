@@ -1,0 +1,43 @@
+--여행경로--
+주어진 비행기 경로에 따라 시작점부터 끝까지 가는데 거치는 경로를 출력하는 문제이다.
+굉장히 간단해 보였지만 hidden case1에서 계속막혔다. 그 이유는 중간지점에서 여러 경로가 존재하는 경우 그 경로중 하나는 끝까지 순회하지 못하는 경로이기에
+이것을 걸러줄 수 있어야한다. 아직 방법을 찾지 못했다
+
+from collections import deque
+import copy
+q=deque()
+def bfs(t):
+    tmp=[]
+    tmp.append("ICN")
+    while q:
+        con=q.popleft()
+        tmp.append(con)
+        for i in t:
+            if i[0]==con:
+                q.append(i[1])
+                t.remove(i)
+                break
+    if len(t)>0:
+        return 0
+    return tmp
+def solution(tickets):
+    answer = []
+    for i in tickets:
+        if i[0]=='ICN':
+            arr=[]
+            q.append(i[1])
+            t=copy.deepcopy(tickets)
+            t.remove(i)
+            arr=bfs(t)
+            if len(answer)==0 and arr!=0:
+                answer=arr
+            elif arr!=0:
+                for i in range(len(answer)):
+                    if answer[i]==arr[i]: continue
+                    elif answer[i]<arr[i]:
+                        break
+                    elif answer[i]>arr[i]:
+                        answer=arr
+                        break
+    return answer
+print(solution([[['ICN','A'],['A','B'],['A','C'],['C','A'],['B','D']]]))
