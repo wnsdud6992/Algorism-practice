@@ -1,0 +1,33 @@
+--가장 큰수--
+주어진 numbers라는 여러개의 수가 들어있는 리스트에서 수의 배열을 바꾼 후 연결하여 하나의 수로 연결하였을 때 가장 큰 수를 만드는 문제이다.
+처음에는 permutations라는 내장함수를 사용해 풀었다. 테스트 케이스는 돌아갔지만 범위를 본 numbers의 개수가 10000개까지 였기에 시간초과가 났다.
+
+<시간초과>
+from itertools import permutations
+def solution(numbers):
+    answer = ''
+    per=permutations(numbers,len(numbers))
+    for i in per:
+        tmp=[]
+        for j in i:
+            tmp.append(str(j))
+        tmp=''.join(tmp)
+        if answer<tmp:
+            answer=tmp
+    return answer
+ 
+반복문을 이용하여 브루트포스 방식으로 문제를 해결하려고 했으나 numbers에 올 수 있는 수가 0~1000사이의 수이므로
+수가 한자리 일때 두자리 일때 세자리 일때 따로 고려해주어야했다. 더 중요한것은 3 31 34가 있는 경우 34 3 31형식으로 와야한다.
+즉 자리수가 맞지 않는 두 수를 비교시 아래자리 숫자가 가장 앞에 오는 숫자보다 작을 경우 뒤에오고 클 경우 앞에 오는 것이다.
+이런식의 비교를 좀더 쉽게하는 방식으로 numbers에 오는 수는 최대 3자리 수이니 모든 수를 3번씩 반복나열하여 수 전체를 비교한다면
+굳이 따로 고려해줄 필요가 없게 된다. 
+sort함수의 특징은 정수 비교시 전체 값을 비교하지만 문자열 비교시 아스키코드값으로 변환하여 비교하기에 첫째자리부터 비교한다.
+즉 '1234'보다 '567'이 더 큰 값이다.
+
+def solution(num): 
+  num = list(map(str, num)) 
+  num.sort(key = lambda x : x*3, reverse = True) 
+  return str(int(''.join(num)))
+마지막에 ''.join(num)도 str로 문제가 없어 보였다. 그런데 이상하게 str(int())를 추가해 주었는데 이 부분은 출력값이 0000이 나온경우
+즉 모든 numbers가 0인경우 출력은 제대로 된 수 0을 출력하기 위해 int를 취하고 다시 문자열로 바꿔주었다.
+
