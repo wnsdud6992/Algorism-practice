@@ -1,0 +1,20 @@
+--위장--
+주어진 신체 부위별 옷에 따라 조합해서 입을 수 있는 경우의 수를 출력하라
+가장 쉽게 생각할 수 있는 것은 permutation이지만 옷이 몇가지 종류이고 몇가지 부위의 옷들이 나올지 모르기에 
+주어진 clothes에서 직접 조합을 계산하기로 하였다. 생각해보면 모든 부위별 옷 종류에 1을 더해 전체 곱하고 -1하며 된다.
+그 이유는 각 부위별로 선택수에다가 그 부위의 옷을 안입었을 때를 고려해줘야하기에 1을 더하고 전체를 곱함으로써 모든 경우의 수를
+파악 할 수 있는데 1을 빼는 건 모든 부위에서 옷을 안입었을 경우를 제외해야 하기 때문이다.
+
+def solution(clothes):
+    answer = 1
+    dict={}
+    for i in clothes:
+        if i[1] in dict:
+            dict[i[1]].append(i[0])
+        else: 
+            dict[i[1]]=[]
+            dict[i[1]].append(i[0])
+    
+    for i in dict:
+        answer*=len(dict[i])+1             //dict을 돌면서 1로 설정한 answer에 1씩 더해 곱하고 마지막에 1빼준다
+    return answer-1
