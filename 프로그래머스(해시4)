@@ -1,0 +1,38 @@
+--베스트 앨범--
+주어진 장르별 여러개의 노래의 플레이 수가 주어졌을 때 가장 많이 플레이된 장르부터 2개씩 많이 플레이 된 노래 고유번호 출력
+장르별로 돌면서 dict형으로 장르를 'key' 각 노래의 고유번호랑 플레이 횟수를 value로 저장하였다.
+그 후 각 장르별 총 플레이 횟수를 장르 이름과 같이 튜플로 하나의 배열에 저장하여 sort하였다. 여기서 안 사실 dict은 sort가 불가능한 타입이다!!
+장르별로 총 플레이 수에 따라 sort되었기에 순서대로 dict에서 key별로 value 2개씩 꺼내온다.
+이때 한 장르 안에 최고 플레이 수가 2개가 같다면 고유번호가 작은것을 먼저 뽑아온다.
+
+def solution(genres, plays):
+    dic={}
+    answer = []
+    order=[]
+    for i,g in enumerate(genres):
+        if g in dic:
+            dic[g].append((plays[i],i))
+        else:
+            dic[g]=[]
+            dic[g].append((plays[i],i))
+    for i in dic:
+        tmp=0
+        for j in dic[i]:
+            tmp+=j[0]
+        order.append((tmp,i))
+    order.sort(reverse = True)
+    for i in order:
+        tmp=[]
+        for j in dic[i[1]]:
+            tmp.append(j)
+        tmp.sort(reverse = True)
+        if len(tmp)>1:
+            if tmp[0][0]==tmp[1][0]:
+                answer.append(min(tmp[1][1],tmp[0][1]))
+                answer.append(max(tmp[1][1],tmp[0][1]))
+            else:
+                answer.append(tmp[0][1])
+                answer.append(tmp[1][1])
+        else:
+            answer.append(tmp[0][1])
+    return answer
