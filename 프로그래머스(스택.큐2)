@@ -12,12 +12,7 @@ def solution(priorities, location):
     answer = 0
     while q:
         tmp=q.popleft()
-        flag=0
-        for i in q:
-            if tmp<i:
-                flag+=1
-                break
-        if flag==0:
+        if tmp>=max(q):
             answer+=1
             if location==0: break
             else: location-=1
@@ -26,3 +21,4 @@ def solution(priorities, location):
             if location==0: location=len(q)-1
             else: location-=1
     return answer
+print(solution([2, 1, 3, 2]	,2))
