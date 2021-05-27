@@ -1,0 +1,30 @@
+--기능개발--
+progress는 각 기능마다 진행정도를, speeds는 하루에 진행할 수 있는 수행속도를 나타낸다.
+progresses순서대로 출시가되기에 뒤에 기능이 먼저 완성되어도 앞에 기능이 완성되야 동시에 출시 가능하다. 
+시간에 따라 출시되는 개수를 출력해라
+- 진행정도를 남은 %로 바꾸어 각 기능의 진행속도로 나눔으로써 소요되는 시간을 구했다. 그후 스택을 순회하면서
+앞자리 날짜보다 작으면 같이 출시하도록 설정하였다. 앞에거보다 시간이 오래걸리는 기능이 있으면 그 기능은
+다음 출시때 출시된다
+
+def solution(progresses, speeds):
+    answer = []
+    date=[]
+    for i in range(len(progresses)):
+        progresses[i]=100-progresses[i]
+    for i in range(len(progresses)):
+        if progresses[i]%speeds[i]==0:
+            date.append(progresses[i]//speeds[i])
+        else: 
+            date.append(progresses[i]//speeds[i]+1)
+    Max=date[0]
+    tmp=0
+    for i in date:
+        if Max>=i:
+            tmp+=1
+        else:
+            Max=i
+            answer.append(tmp)
+            tmp=1
+            continue
+    answer.append(tmp)
+    return answer
