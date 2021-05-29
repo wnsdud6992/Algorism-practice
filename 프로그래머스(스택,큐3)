@@ -1,0 +1,20 @@
+--주식가격--
+주어진 prices라는 매개변수에 시간에 따른 주식가격이 나열되어있다. 이때 각 시각에 주식이 몇초후에 가격이 떨어질지 구해 배열로 반환하는 문제이다.
+문제는 어렵지 않다. 이중 반복문을 이용해 prices를 돌면서 해당 가격 뒤에 값들과 비교해 해당 값보다 작은 값이 발견되는 즉시 멈추고, 그때까지 걸린 시간을
+반환하면된다. 한가지 주의할 사항이라면 새로 비교를 시작한 가격은 다음 시간에 바로 하락장이어도 1초동안 하락하지 않은 것으로 판별한다. 이에 따라 tmp+1을 더해야한다.
+
+def solution(prices):
+    answer = []
+    for i in range(len(prices)):
+        tmp=0
+        flag=0
+        for j in range(i+1,len(prices)):
+            if prices[i]<=prices[j]:
+                tmp+=1
+            else:
+                answer.append(tmp+1)    #바로 하락하여도 +1초동안 떨어지지 않은 것이라고 계산
+                flag+=1 
+                break
+        if flag==0:
+            answer.append(tmp)
+    return answer
