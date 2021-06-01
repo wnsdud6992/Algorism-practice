@@ -1,0 +1,23 @@
+--디스크 컨트롤--
+주어진 시작시간, 작업시간이 적혀있는 배열에서 각 작업이 기다리는 시간을 최소화하여 작업을 수행할때 각 작업이 기다리고 작업하는데 걸리는 시간의 평균을 구하는 문제이다.
+힙으로 분류되긴했지만 풀다보니 특징을 찾게되었다. 작업을 걸리는 시간순으로 나열하고 시간에 맞춰 걸리는 시간이 작은것 부터 시작하는 것이다.
+이를 위해 먼저 jobs를 각 작업이 걸리는 시간 순으로 재배열하였다. 그후 while문을 돌면서 모든 작업이 수행될때 까지 반복하였다.
+현재 시간을 time으로 놓고 jobs를 돌면서 time보다 작은 값의 시작시간을 갖는 작업은 실행시킨다.  
+
+def solution(jobs):
+    answer = 0
+    time = 0  
+    l=len(jobs)
+    jobs = sorted(jobs, key=lambda x: x[1])  
+
+    while len(jobs) != 0:
+        for i in range(len(jobs)):
+            if jobs[i][0] <= time:       //현재시각보다 일찍 작업이 요구된 경우
+                time += jobs[i][1]
+                answer += time - jobs[i][0]
+                jobs.pop(i)              //해당 작업은 시행했으므로 pop
+                break                //이렇게 반복문을 돌면서 pop하는 경우 꼭 중간에 break하고 다시 반복문을 돌아야 indexerror가 나지 않는다.
+            if i == len(jobs) - 1:   //jobs를 돌면서 마지막 작업까지 다 돌았는데 현재 time보다 일찍 작업요청이 들어온 것이 없는 경우, time을 1씩 늘려준다.
+                time += 1            //문제에서 해당 시간에 요청 작업이 없는 경우 가장 먼저 들어온 작업을 수행하라고 했는데 이를 time을 증가시켜주면서 요청시간과 비교하여 해결!
+
+    return answer // l
