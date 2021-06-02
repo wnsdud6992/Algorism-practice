@@ -1,0 +1,27 @@
+--조이스틱--
+문자열을 AAA로 만드는데 건들이는 조이틱 수를 출력하는 문제이다.
+모든 경우를 고려하는 브루트포스로 구현하고자 하였으나 특정 케이스에서 막혔다. 도대체 왜 그리디로 어떻게 해결하는지 아직 이해가 안됐지만 코드를 분석함으로써 이해해보고자 하였다.
+
+
+def solution(name):
+    make_name = [min(ord(i) - ord("A"), ord("Z") - ord(i)+1) for i in name]  //나보다 간단하게 리스트화하였다. K기준으로 하기보다 그냥 빼서 최소값...좋다.
+    idx, answer = 0, 0          //다루고자하는 문자의 idx를 나타내기 위해 선언
+    
+    while True:
+        answer += make_name[idx]
+        make_name[idx] = 0             //해당 문자는 A로 만들어줬으므로 0으로 저장
+        if sum(make_name) ==0:         //모든 문자가 A인경우! 반복종료
+            break
+        left, right = 1, 1            //좌우 이동 칸은 1칸씩이다.
+        while make_name[idx - left] ==0:        //이부분을 구현하다 문제가 발생하였다. 다음과 같이 오른쪽으로 0인 개수와 왼쪽으로 0이 연속으로 오는 개수를 구하여
+            left +=1                            //비교해서 더 적은 곳으로 이동하고자 하였다. idx를 건들이지 않고 idx기준으로 left, right를 임시로 설정하여 좌우 0이 오는 개수를 비교!
+        while make_name[idx + right] ==0:       //더 적은 쪽으로 이동하는 그리디 메소드를 이용하였다.
+            right +=1
+        answer += left if left < right else right           //answe은 더 적은쪽으로 이동한 만큼 더해준다.
+        idx += -left if left < right else right              //이동한 방향에 따라 idx로 조절해준다
+    return answer
+    
+
+
+
+코드자체는 이해하는데 문제는 없지만 이를 구현할때 오류가 많이 발생하였고 지저분하였다. 이와 같이 굉장히 심플하고 정확하게 구현하는 방법을 연구해야겠다.
